@@ -20,6 +20,8 @@ public struct Content
     public var header : AnyHeaderFooter?
     public var footer : AnyHeaderFooter?
     
+    public var inputAccessory : ViewProvider?
+    
     public var overscrollFooter : AnyHeaderFooter?
     
     public var sections : [Section]
@@ -54,17 +56,19 @@ public struct Content
         refreshControl : RefreshControl? = nil,
         header : AnyHeaderFooter? = nil,
         footer : AnyHeaderFooter? = nil,
+        inputAccessory : ViewProvider? = nil,
         overscrollFooter : AnyHeaderFooter? = nil,
         sections : [Section] = []
         )
     {
         self.identifier = identifier
         
-        
         self.refreshControl = refreshControl
         
         self.header = header
         self.footer = footer
+        
+        self.inputAccessory = inputAccessory
         
         self.overscrollFooter = overscrollFooter
         

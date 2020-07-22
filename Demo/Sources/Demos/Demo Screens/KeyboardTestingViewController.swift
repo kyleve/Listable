@@ -46,6 +46,10 @@ final class KeyboardTestingViewController : UIViewController
                 section += Item(TextFieldElement(content: "Item 13"), sizing: .fixed(height: 100.0))
                 section += Item(TextFieldElement(content: "Item 14"), sizing: .fixed(height: 100.0))
             }
+            
+            list.content.inputAccessory = ViewProvider {
+                InputAccessory()
+            }
         }
         
         self.navigationItem.rightBarButtonItems = [
@@ -67,6 +71,13 @@ final class KeyboardTestingViewController : UIViewController
         case .adjustsWhenVisible:
             self.listView.behavior.keyboardAdjustmentMode = .none
         }
+    }
+}
+
+struct InputAccessory : ProxyElement
+{
+    var elementRepresentation: Element {
+        Label(text: "Hello, World!")
     }
 }
 
