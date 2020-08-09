@@ -162,8 +162,7 @@ public struct ListAppearance : ListLayoutAppearance
             listFooterHeight : CGFloat = 60.0,
             overscrollFooterHeight : CGFloat = 60.0,
             itemPositionGroupingHeight : CGFloat = 0.0
-        )
-        {
+        ) {
             self.itemHeight = itemHeight
             self.sectionHeaderHeight = sectionHeaderHeight
             self.sectionFooterHeight = sectionFooterHeight
@@ -223,8 +222,7 @@ public struct ListAppearance : ListLayoutAppearance
             itemSpacing : CGFloat = 0.0,
             itemToSectionFooterSpacing : CGFloat = 0.0,
             lastSectionToFooterSpacing : CGFloat = 0.0
-        )
-        {
+        ) {
             self.padding = padding
             self.width = width
             

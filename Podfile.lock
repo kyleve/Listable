@@ -5,8 +5,8 @@ PODS:
   - BlueprintLists/Tests (0.8.0):
     - BlueprintUI
     - Listable
-  - BlueprintUI (0.12.2)
-  - BlueprintUICommonControls (0.12.2):
+  - BlueprintUI (0.13.1)
+  - BlueprintUICommonControls (0.13.1):
     - BlueprintUI
   - EnglishDictionary (1.0.0.LOCAL)
   - Listable (0.8.0)
@@ -44,8 +44,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   BlueprintLists: 730c82d885593a806787fbd8c25fc7fe49bbc1ae
-  BlueprintUI: 8b1c1cfd7ed73444ebfb66b54ad539cec6b600d9
-  BlueprintUICommonControls: 31bfe6642633a1fde476bc566c565f5473343427
+  BlueprintUI: 9fffaebdfd47d9e59b057ecfbfc2443b478c9d2e
+  BlueprintUICommonControls: 4cc5f575863dde68cd2377a11e6545e38a49b1c1
   EnglishDictionary: f03968b9382ddc5c8dd63535efbf783c6cd45f1c
   Listable: 0990f6cd1ac2b1d5f288c7f5d45ae8b0391508c8
   Snapshot: cda3414db426919d09f775434b36289c8e864183

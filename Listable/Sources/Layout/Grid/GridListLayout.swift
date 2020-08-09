@@ -9,7 +9,7 @@ import Foundation
 
 public extension LayoutDescription
 {
-    static func grid_experimental(_ configure : @escaping (inout GridAppearance) -> () = { _ in }) -> Self
+    static func grid(_ configure : @escaping (inout GridAppearance) -> () = { _ in }) -> Self
     {
         GridListLayout.describe(appearance: configure)
     }
@@ -42,12 +42,6 @@ public struct GridAppearance : ListLayoutAppearance
     
     public struct Sizing : Equatable
     {
-        public var itemSize : ItemSize
-        
-        public enum ItemSize : Equatable {
-            case fixed(CGSize)
-        }
-        
         public var sectionHeaderHeight : CGFloat
         public var sectionFooterHeight : CGFloat
         
@@ -56,7 +50,6 @@ public struct GridAppearance : ListLayoutAppearance
         public var overscrollFooterHeight : CGFloat
             
         public init(
-            itemSize : ItemSize = .fixed(CGSize(width: 100.0, height: 100.0)),
             sectionHeaderHeight : CGFloat = 60.0,
             sectionFooterHeight : CGFloat = 40.0,
             listHeaderHeight : CGFloat = 60.0,
@@ -64,7 +57,6 @@ public struct GridAppearance : ListLayoutAppearance
             overscrollFooterHeight : CGFloat = 60.0
         )
         {
-            self.itemSize = itemSize
             self.sectionHeaderHeight = sectionHeaderHeight
             self.sectionFooterHeight = sectionFooterHeight
             self.listHeaderHeight = listHeaderHeight
@@ -80,35 +72,184 @@ public struct GridAppearance : ListLayoutAppearance
         }
     }
     
+    
+    public enum ItemSize : Equatable {
+        case fixedSize(FixedSize)
+        case fixedCount(FixedCount)
+        
+        public struct FixedSize : Equatable {
+        
+            public var size : CGSize
+            
+            public var minHorizontalSpacing : CGFloat
+            
+            public init(
+                size: CGSize,
+                minHorizontalSpacing : CGFloat
+            ) {
+                self.size = size
+                
+                self.minHorizontalSpacing = minHorizontalSpacing
+            }
+            
+            func layoutInfo(for contentWidth : CGFloat) -> LayoutInfo
+            {
+                let itemWidth = min(contentWidth, size.width)
+                
+                let columnCount = Int(floor(contentWidth / itemWidth))
+                
+                return self.layoutInfo(contentWidth: contentWidth, columnCount: columnCount, itemWidth: itemWidth)
+            }
+            
+            private func layoutInfo(contentWidth : CGFloat, columnCount : Int, itemWidth : CGFloat) -> LayoutInfo
+            {
+                precondition(contentWidth >= itemWidth)
+                
+                let leftoverForSpacing = contentWidth - (CGFloat(columnCount) * itemWidth)
+                
+                let minTotalSpacing = minHorizontalSpacing * (CGFloat(columnCount) - 1)
+                
+                if columnCount == 1 {
+                    // Degenerate case where there is no space left for a real grid; this is just a list.
+                    
+                    return LayoutInfo(
+                        itemSize: CGSize(width: itemWidth, height: size.height),
+                        horizontalSpacing: 0.0,
+                        columnCount: 1
+                    )
+                } else if leftoverForSpacing < minTotalSpacing {
+                    return self.layoutInfo(contentWidth: contentWidth, columnCount: columnCount-1, itemWidth: itemWidth)
+                } else {
+                    let horizontalSpacing = round(leftoverForSpacing / (CGFloat(columnCount) - 1))
+                    
+                    return LayoutInfo(
+                        itemSize: CGSize(width: itemWidth, height: size.height),
+                        horizontalSpacing: horizontalSpacing,
+                        columnCount: columnCount
+                    )
+                }
+            }
+        }
+        
+        public struct FixedCount : Equatable {
+            
+            public var count : Int
+            public var height : CGFloat
+            
+            public var horizontalSpacing : CGFloat
+            
+            public init(
+                count: Int,
+                height: CGFloat,
+                horizontalSpacing: CGFloat
+            ) {
+                self.count = count
+                self.height = height
+                self.horizontalSpacing = horizontalSpacing
+            }
+            
+            func layoutInfo(for contentWidth : CGFloat) -> LayoutInfo
+            {
+                let totalSpacing = (horizontalSpacing * CGFloat(count - 1))
+                let itemWidth = round((contentWidth - totalSpacing) / CGFloat(count))
+                
+                return LayoutInfo(
+                    itemSize: CGSize(width: itemWidth, height: height),
+                    horizontalSpacing: horizontalSpacing,
+                    columnCount: count
+                )
+            }
+        }
+        
+        func layoutInfo(for contentWidth : CGFloat) -> LayoutInfo
+        {
+            switch self {
+            case .fixedSize(let info): return info.layoutInfo(for: contentWidth)
+            case .fixedCount(let info): return info.layoutInfo(for: contentWidth)
+            }
+        }
+        
+        struct LayoutInfo
+        {
+            var itemSize : CGSize
+            var horizontalSpacing : CGFloat
+            var columnCount : Int
+            
+            func group(items : [ListLayoutContent.ItemInfo]) -> [[ListLayoutContent.ItemInfo]]
+            {
+                var items = items
+                
+                var grouped = [[ListLayoutContent.ItemInfo]]()
+                
+                while items.count > 0 {
+                    grouped.append(items.safeDropFirst(self.columnCount))
+                }
+                
+                return grouped
+            }
+        }
+    }
 
     public struct Layout : Equatable
     {
+        public var itemSize : ItemSize
+        
+        /// The padding to place around the outside of the content of the list.
         public var padding : UIEdgeInsets
+        
+        /// The width of the content of the list, which can be optionally constrained.
         public var width : WidthConstraint
 
+        /// The spacing between the list header and the first section.
+        /// Not applied if there is no list header.
+        public var headerToFirstSectionSpacing : CGFloat
+
+        /// The spacing to apply between sections, if the previous section has no footer.
         public var interSectionSpacingWithNoFooter : CGFloat
+        /// The spacing to apply between sections, if the previous section has a footer.
         public var interSectionSpacingWithFooter : CGFloat
         
+        /// The spacing to apply below a section header, before its items.
+        /// Not applied if there is no section header.
         public var sectionHeaderBottomSpacing : CGFloat
+        /// The spacing between rows in the grid.
+        public var rowSpacing : CGFloat
+        /// The spacing between the last item in the section and the footer.
+        /// Not applied if there is no section footer.
         public var itemToSectionFooterSpacing : CGFloat
+        
+        /// The spacing between the last section and the footer of the list.
+        /// Not applied if there is no list footer.
+        public var lastSectionToFooterSpacing : CGFloat
                 
+        /// Creates a new `Layout` with the provided options.
         public init(
+            itemSize : ItemSize = .fixedSize(.init(size: CGSize(width: 110.0, height: 90.0), minHorizontalSpacing: 10.0)),
             padding : UIEdgeInsets = .zero,
             width : WidthConstraint = .noConstraint,
-            interSectionSpacingWithNoFooter : CGFloat = 0.0,
-            interSectionSpacingWithFooter : CGFloat = 0.0,
-            sectionHeaderBottomSpacing : CGFloat = 0.0,
-            itemToSectionFooterSpacing : CGFloat = 0.0
-        )
-        {
+            headerToFirstSectionSpacing : CGFloat = 10.0,
+            interSectionSpacingWithNoFooter : CGFloat = 20.0,
+            interSectionSpacingWithFooter : CGFloat = 20.0,
+            sectionHeaderBottomSpacing : CGFloat = 10.0,
+            rowSpacing : CGFloat = 10.0,
+            itemToSectionFooterSpacing : CGFloat = 10.0,
+            lastSectionToFooterSpacing : CGFloat = 10.0
+        ) {
+            self.itemSize = itemSize
+            
             self.padding = padding
             self.width = width
+            
+            self.headerToFirstSectionSpacing = headerToFirstSectionSpacing
             
             self.interSectionSpacingWithNoFooter = interSectionSpacingWithNoFooter
             self.interSectionSpacingWithFooter = interSectionSpacingWithFooter
             
             self.sectionHeaderBottomSpacing = sectionHeaderBottomSpacing
+            self.rowSpacing = rowSpacing
             self.itemToSectionFooterSpacing = itemToSectionFooterSpacing
+            
+            self.lastSectionToFooterSpacing = lastSectionToFooterSpacing
         }
 
         public mutating func set(with block : (inout Layout) -> ())
@@ -193,256 +334,150 @@ final class GridListLayout : ListLayout
     func layout(
         delegate : CollectionViewLayoutDelegate,
         in collectionView : UICollectionView
-        )
-    {
-        let direction = self.layoutAppearance.direction
-        let layout = self.layoutAppearance.layout
-        let sizing = self.layoutAppearance.sizing
+    ) {
+        let gridSizing = layoutAppearance.sizing
+        let gridLayout = layoutAppearance.layout
         
-        let viewSize = collectionView.bounds.size
+        // TODO: Need to figure out how the width constraint and centering + paddding works.
         
-        let viewWidth = viewSize.width
+        let viewWidth = collectionView.bounds.width
+        let contentWidth = gridLayout.width.clamp(viewWidth - gridLayout.padding.left - gridLayout.padding.right)
+        let xOrigin = gridLayout.padding.left
         
-        let rootWidth = ListAppearance.Layout.width(
-            with: viewWidth,
-            padding: HorizontalPadding(left: layout.padding.left, right: layout.padding.right),
-            constraint: layout.width
-        )
+        var lastMaxY : CGFloat = gridLayout.padding.top
         
-        //
-        // Set Frame Origins
-        //
-        
-        var lastSectionMaxY : CGFloat = 0.0
-        var lastContentMaxY : CGFloat = 0.0
-        
-        //
-        // Header
-        //
-        
-        performLayout(for: self.content.header) { header in
-            let hasListHeader = self.content.header.isPopulated
+        performLayout(for: content.header) { header in
+            guard header.isPopulated else {
+                return
+            }
             
-            let position = header.layout.width.position(with: viewSize, defaultWidth: rootWidth)
+            header.x = xOrigin
+            header.y = lastMaxY
             
             let measureInfo = Sizing.MeasureInfo(
-                sizeConstraint: CGSize(width: position.width, height: .greatestFiniteMagnitude),
-                defaultSize: CGSize(width: 0.0, height: sizing.listHeaderHeight),
+                sizeConstraint: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
+                defaultSize: CGSize(width: contentWidth, height: gridSizing.listHeaderHeight),
                 direction: .vertical
             )
             
-            let height = header.measurer(measureInfo).height
+            header.size = header.measurer(measureInfo)
             
-            header.x = position.origin
-            header.size = CGSize(width: position.width, height: height)
-            header.y = lastContentMaxY
+            lastMaxY = header.defaultFrame.maxY
             
-            if hasListHeader {
-                lastContentMaxY = header.defaultFrame.maxY
+            if content.sections.isEmpty == false {
+                lastMaxY += gridLayout.headerToFirstSectionSpacing
             }
         }
         
-        switch direction {
-        case .vertical:
-            lastSectionMaxY += layout.padding.top
-            lastContentMaxY += layout.padding.top
-            
-        case .horizontal:
-            lastSectionMaxY += layout.padding.left
-            lastContentMaxY += layout.padding.left
-        }
+        let layoutInfo = gridLayout.itemSize.layoutInfo(for: contentWidth)
         
-        //
-        // Sections
-        //
-        
-        self.content.sections.forEachWithIndex { sectionIndex, isLast, section in
-            
-            let sectionPosition = section.layout.width.position(with: viewSize, defaultWidth: rootWidth)
-            
-            //
-            // Section Header
-            //
-            
-            let hasSectionHeader = section.header.isPopulated
-            let hasSectionFooter = section.footer.isPopulated
+        content.sections.forEachWithIndex { index, isLast, section in
             
             performLayout(for: section.header) { header in
-                let width = header.layout.width.merge(with: section.layout.width)
-                let position = width.position(with: viewSize, defaultWidth: sectionPosition.width)
+                guard header.isPopulated else {
+                    return
+                }
+                
+                header.x = xOrigin
+                header.y = lastMaxY
                 
                 let measureInfo = Sizing.MeasureInfo(
-                    sizeConstraint: CGSize(width: position.width, height: .greatestFiniteMagnitude),
-                    defaultSize: CGSize(width: 0.0, height: sizing.sectionHeaderHeight),
+                    sizeConstraint: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
+                    defaultSize: CGSize(width: contentWidth, height: gridSizing.sectionHeaderHeight),
                     direction: .vertical
                 )
                 
-                let height = header.measurer(measureInfo).height
+                header.size = header.measurer(measureInfo)
                 
-                header.x = position.origin
-                header.size = CGSize(width: position.width, height: height)
-                header.y = lastContentMaxY
+                lastMaxY = header.defaultFrame.maxY
                 
-                if hasSectionHeader {
-                    lastContentMaxY = section.header.defaultFrame.maxY
-                    lastContentMaxY += layout.sectionHeaderBottomSpacing
+                if section.items.isEmpty == false {
+                    lastMaxY += layoutAppearance.layout.sectionHeaderBottomSpacing
                 }
             }
             
-            //
-            // Section Items
-            //
+            let rows = layoutInfo.group(items: section.items)
             
-            let groupedItems = sizing.itemSize.grouped(within: sectionPosition.width, values: section.items)
-            
-            groupedItems.grouped.forEachWithIndex { rowIndex, isLast, row in
+            rows.forEachWithIndex { rowIndex, isLastRow, row in
                 
-                var xOrigin = sectionPosition.origin
+                var xPosition = xOrigin
                 
-                row.forEachWithIndex { columnIndex, isLast, item in
-                    item.x = xOrigin
-                    item.y = lastContentMaxY
+                // TODO: When there is only one row; need to center the item, I think?
+                
+                row.forEachWithIndex { columnIndex, isLastColumn, item in
                     
-                    item.size = groupedItems.itemSize
+                    item.x = xPosition
+                    item.y = lastMaxY
+                    item.size = layoutInfo.itemSize
                     
-                    xOrigin = item.frame.maxX
+                    xPosition += layoutInfo.itemSize.width
+                    xPosition += layoutInfo.horizontalSpacing
                 }
                 
-                lastContentMaxY += groupedItems.itemSize.height
+                lastMaxY += layoutInfo.itemSize.height
+                
+                if isLastRow {
+                    lastMaxY += layoutAppearance.layout.itemToSectionFooterSpacing
+                } else {
+                    lastMaxY += gridLayout.rowSpacing
+                }
             }
-            
-            //
-            // Section Footer
-            //
-            
+
             performLayout(for: section.footer) { footer in
-                let width = footer.layout.width.merge(with: section.layout.width)
-                let position = width.position(with: viewSize, defaultWidth: sectionPosition.width)
+                guard footer.isPopulated else {
+                    return
+                }
+                
+                footer.x = xOrigin
+                footer.y = lastMaxY
                 
                 let measureInfo = Sizing.MeasureInfo(
-                    sizeConstraint: CGSize(width: position.width, height: .greatestFiniteMagnitude),
-                    defaultSize: CGSize(width: 0.0, height: sizing.sectionFooterHeight),
+                    sizeConstraint: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
+                    defaultSize: CGSize(width: contentWidth, height: gridSizing.sectionFooterHeight),
                     direction: .vertical
                 )
                 
-                let height = footer.measurer(measureInfo).height
+                footer.size = footer.measurer(measureInfo)
                 
-                footer.size = CGSize(width: position.width, height: height)
-                footer.x = position.origin
-                footer.y = lastContentMaxY
-                
-                if hasSectionFooter {
-                    lastContentMaxY = footer.defaultFrame.maxY
+                lastMaxY = footer.defaultFrame.maxY
+            }
+            
+            if isLast {
+                lastMaxY += gridLayout.lastSectionToFooterSpacing
+            } else {
+                if section.footer.isPopulated {
+                    lastMaxY += gridLayout.interSectionSpacingWithFooter
+                } else {
+                    lastMaxY += gridLayout.interSectionSpacingWithNoFooter
                 }
             }
-            
-            // Add additional padding from config.
-            
-            if isLast == false {
-                let additionalSectionSpacing = hasSectionFooter ? layout.interSectionSpacingWithFooter : layout.interSectionSpacingWithNoFooter
-                
-                lastSectionMaxY += additionalSectionSpacing
-                lastContentMaxY += additionalSectionSpacing
+        }
+        
+        performLayout(for: content.footer) { footer in
+            guard footer.isPopulated else {
+                return
             }
-        }
-        
-        switch direction {
-        case .vertical: lastContentMaxY += layout.padding.bottom
-        case .horizontal: lastContentMaxY += layout.padding.right
-        }
-        
-        //
-        // Footer
-        //
-        
-        performLayout(for: self.content.footer) { footer in
-            let hasFooter = footer.isPopulated
             
-            let position = footer.layout.width.position(with: viewSize, defaultWidth: rootWidth)
+            footer.x = xOrigin
+            footer.y = lastMaxY
             
             let measureInfo = Sizing.MeasureInfo(
-                sizeConstraint: CGSize(width: position.width, height: .greatestFiniteMagnitude),
-                defaultSize: CGSize(width: 0.0, height: sizing.listFooterHeight),
+                sizeConstraint: CGSize(width: contentWidth, height: .greatestFiniteMagnitude),
+                defaultSize: CGSize(width: contentWidth, height: gridSizing.listFooterHeight),
                 direction: .vertical
             )
             
-            let height = footer.measurer(measureInfo).height
+            footer.size = footer.measurer(measureInfo)
             
-            footer.size = CGSize(width: position.width, height: height)
-            footer.x = position.origin
-            footer.y = lastContentMaxY
-            
-            if hasFooter {
-                lastContentMaxY = footer.defaultFrame.maxY
-                lastContentMaxY += layout.sectionHeaderBottomSpacing
-            }
+            lastMaxY = footer.defaultFrame.maxY
         }
         
-        //
-        // Overscroll Footer
-        //
-                    
-        performLayout(for: self.content.overscrollFooter) { footer in
-
-            let position = footer.layout.width.position(with: viewSize, defaultWidth: rootWidth)
-            
-            let measureInfo = Sizing.MeasureInfo(
-                sizeConstraint: CGSize(width: position.width, height: .greatestFiniteMagnitude),
-                defaultSize: CGSize(width: 0.0, height: sizing.overscrollFooterHeight),
-                direction: .vertical
-            )
-            
-            let height = footer.measurer(measureInfo).height
-            
-            footer.x = position.origin
-            footer.size = CGSize(width: position.width, height: height)
-        }
+        lastMaxY += gridLayout.padding.bottom
         
-        //
-        // Remaining Calculations
-        //
-        
-        self.content.contentSize = CGSize(width: viewWidth, height: lastContentMaxY)
+        self.content.contentSize = CGSize(width: contentWidth, height: lastMaxY)
     }
 }
 
-
-fileprivate extension GridAppearance.Sizing.ItemSize {
-    
-    struct Grouped<Value>
-    {
-        var itemsInRowSpacing : CGFloat
-        var itemSize : CGSize
-        var grouped : [[Value]]
-    }
-    
-    func grouped<Value>(within width : CGFloat, values : [Value]) -> Grouped<Value>
-    {
-        switch self {
-        case .fixed(let itemSize):
-            let itemsPerRow = Int(max(1, floor(width / itemSize.width)))
-            
-            return Grouped(
-                itemsInRowSpacing: (width - (itemSize.width * CGFloat(itemsPerRow))) / CGFloat(itemsPerRow - 1 == 0 ? 1 : itemsPerRow - 1),
-                itemSize: itemSize,
-                grouped: self.group(values: values, into: itemsPerRow)
-            )
-        }
-    }
-    
-    private func group<Value>(values : [Value], into itemsPerRow : Int) -> [[Value]]
-    {
-        var values = values
-        
-        var grouped : [[Value]] = []
-        
-        while values.count > 0 {
-            grouped.append(values.safeDropFirst(itemsPerRow))
-        }
-        
-        return grouped
-    }
-}
 
 fileprivate extension Array
 {
@@ -462,3 +497,5 @@ fileprivate func performLayout<Input>(for input : Input, _ block : (Input) -> ()
 {
     block(input)
 }
+
+

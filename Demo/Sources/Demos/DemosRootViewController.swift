@@ -43,7 +43,7 @@ public final class DemosRootViewController : ListViewController
                     self.push(CollectionViewBasicDemoViewController())
                 }
             )
-            
+
             section += Item(
                 DemoItem(text: "Blueprint Integration"),
                 selectionStyle: .tappable,
@@ -135,7 +135,7 @@ public final class DemosRootViewController : ListViewController
                 DemoItem(text: "Grid Layout"),
                 selectionStyle: .tappable,
                 onSelect : { _ in
-                    self.push(CustomLayoutsViewController())
+                    self.push(GridLayoutViewController())
             })
             
             section += Item(
