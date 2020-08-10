@@ -63,6 +63,7 @@ public final class ListView : UIView
 
         self.collectionView.view = self
 
+        self.dataSource.view = self
         self.dataSource.presentationState = self.storage.presentationState
         
         self.delegate.view = self
@@ -130,6 +131,19 @@ public final class ListView : UIView
     private let dataSource : DataSource
     
     private let keyboardObserver : KeyboardObserver
+    
+    //
+    // MARK: SwiftUI Support
+    //
+    
+    ///
+    /// When hosting a `ListView` in a SwiftUI tree, you should set this property to the
+    /// `UIViewController` instance which contains the `ListView`. This allows
+    /// Listable to properly set up the view controller hierarchy for contained SwiftUI-backed cells.
+    ///
+    /// You do not need to set this property if you are not using SwiftUI.
+    ///
+    weak var containingViewController : UIViewController? = nil
     
     //
     // MARK: Debugging

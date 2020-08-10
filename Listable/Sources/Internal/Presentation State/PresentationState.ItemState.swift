@@ -21,7 +21,7 @@ protocol AnyPresentationItemState : AnyObject
         
     var cellRegistrationInfo : (class:AnyClass, reuseIdentifier:String) { get }
     
-    func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath) -> UICollectionViewCell
+    func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath) -> AnyItemCell
     
     func applyTo(cell anyCell : UICollectionViewCell, itemState : Listable.ItemState, reason : ApplyReason)
     func applyToVisibleCell()
@@ -188,7 +188,7 @@ extension PresentationState
         
         var cellRegistrationInfo : (class:AnyClass, reuseIdentifier:String)
         
-        func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath) -> UICollectionViewCell
+        func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath) -> AnyItemCell
         {
             let anyCell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellRegistrationInfo.reuseIdentifier, for: indexPath)
             

@@ -10,6 +10,7 @@ internal extension ListView
 {
     final class DataSource : NSObject, UICollectionViewDataSource
     {
+        unowned var view : ListView!
         unowned var presentationState : PresentationState!
 
         func numberOfSections(in collectionView: UICollectionView) -> Int
@@ -30,7 +31,11 @@ internal extension ListView
             
             self.presentationState.registerCell(for: item, in: collectionView)
             
-            return item.dequeueAndPrepareCollectionViewCell(in: collectionView, for: indexPath)
+            let cell = item.dequeueAndPrepareCollectionViewCell(in: collectionView, for: indexPath)
+            
+            cell.willBeProvided(to: self.view)
+            
+            return cell
         }
         
         private let headerFooterReuseCache = ReusableViewCache()

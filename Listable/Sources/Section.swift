@@ -35,18 +35,16 @@ public struct Section
     public init<Identifier:Hashable>(
         _ identifier : Identifier,
         build : Build
-        )
-    {
+    ) {
         self.init(identifier)
         
         build(&self)
     }
-    
+
     public init<Info:SectionInfo>(
         _ info: Info,
         build : Build
-        )
-    {
+    ) {
         self.init(info)
         
         build(&self)
@@ -59,8 +57,7 @@ public struct Section
         header : AnyHeaderFooter? = nil,
         footer : AnyHeaderFooter? = nil,
         items : [AnyItem] = []
-        )
-    {
+    ) {
         self.init(
             HashableSectionInfo(identifier),
             layout: layout,
@@ -78,8 +75,7 @@ public struct Section
         header : AnyHeaderFooter? = nil,
         footer : AnyHeaderFooter? = nil,
         items : [AnyItem] = []
-        )
-    {
+    ) {
         self.info = info
         
         self.layout = layout

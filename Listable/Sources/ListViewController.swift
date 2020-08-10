@@ -100,7 +100,7 @@ open class ListViewController : UIViewController
     
     // MARK: UIViewController
     
-    private var listView : ListView?
+    private(set) var listView : ListView?
     
     public override func loadView() {
         let listView = ListView()

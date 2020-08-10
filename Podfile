@@ -11,6 +11,7 @@ target 'Demo' do
 	# Local Pods
 	pod 'Listable', :path => 'Listable.podspec', :testspecs => ['Tests']
 	pod 'BlueprintLists', :path => 'BlueprintLists.podspec', :testspecs => ['Tests']
+	pod 'SwiftUILists', :path => 'SwiftUILists.podspec', :testspecs => ['Tests']
 
 	# External Pods
 	pod 'BlueprintUI'

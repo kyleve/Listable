@@ -112,7 +112,10 @@ struct DemoItem : BlueprintItemContent, Equatable
     func selectedBackgroundElement(with info: ApplyItemContentInfo) -> Element?
     {
         Box(
-            backgroundColor: .white(0.2),
+            /// The `isHighlighted` check allows us to differentiate between highlighted and selected appearance.
+            /// If you do not want to differ the appearance of highlighted vs. selected, you can omit this check.
+            backgroundColor: info.state.isHighlighted ? .white(0.1) : .white(0.2),
+            
             cornerStyle: .rounded(radius: 8.0),
             shadowStyle: .simple(radius: 2.0, opacity: 0.15, offset: .init(width: 0.0, height: 1.0), color: .black)
         )

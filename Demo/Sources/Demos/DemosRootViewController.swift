@@ -35,7 +35,7 @@ public final class DemosRootViewController : ListViewController
             section.header = HeaderFooter(
                 DemoHeader(title: "List Views")
             )
-            
+        
             section += Item(
                 DemoItem(text: "Basic Demo"),
                 selectionStyle: .selectable(),
@@ -43,6 +43,15 @@ public final class DemosRootViewController : ListViewController
                     self.push(CollectionViewBasicDemoViewController())
                 }
             )
+            
+            if #available(iOS 13.0, *) {
+                section += Item(
+                    DemoItem(text: "SwiftUI Integration"),
+                    selectionStyle: .tappable,
+                    onSelect : { _ in
+                        self.push(SwiftUIListViewController())
+                })
+            }
             
             section += Item(
                 DemoItem(text: "Blueprint Integration"),

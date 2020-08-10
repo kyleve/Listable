@@ -8,13 +8,20 @@
 import UIKit
 
 
+protocol AnyItemCell : UICollectionViewCell
+{
+    func willBeProvided(to listView : ListView)
+    
+    func willDisplay()
+}
+
 ///
 /// An internal cell type used to render items in the list.
 ///
 /// Information on how cell selection appearance customization works:
 /// https://developer.apple.com/documentation/uikit/uicollectionviewdelegate/changing_the_appearance_of_selected_and_highlighted_cells
 ///
-final class ItemCell<Content:ItemContent> : UICollectionViewCell
+final class ItemCell<Content:ItemContent> : UICollectionViewCell, AnyItemCell
 {
     let contentContainer : ContentContainerView
 
@@ -95,5 +102,32 @@ final class ItemCell<Content:ItemContent> : UICollectionViewCell
                 
         self.contentContainer.frame = self.contentView.bounds
     }
+    
+    // MARK: AnyItemCell
+    
+    func willBeProvided(to listView : ListView)
+    {
+        guard let contentView = self.contentContainer.contentView as? ItemCellContentView else {
+            return
+        }
+        
+        contentView.containingViewController = listView.containingViewController
+    }
+    
+    func willDisplay()
+    {
+        guard let contentView = self.contentContainer.contentView as? ItemCellContentView else {
+            return
+        }
+        
+        contentView.willDisplay()
+    }
 }
 
+
+public protocol ItemCellContentView : AnyObject
+{
+    var containingViewController : UIViewController? { get set }
+    
+    func willDisplay()
+}

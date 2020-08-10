@@ -83,15 +83,19 @@ extension ListView
         
         func collectionView(
             _ collectionView: UICollectionView,
-            willDisplay cell: UICollectionViewCell,
+            willDisplay anyCell: UICollectionViewCell,
             forItemAt indexPath: IndexPath
             )
         {
+            let cell = anyCell as! AnyItemCell
+            
             let item = self.presentationState.item(at: indexPath)
             
             item.willDisplay(cell: cell, in: collectionView, for: indexPath)
             
             self.displayedItems[ObjectIdentifier(cell)] = item
+            
+            cell.willDisplay()
         }
         
         func collectionView(
