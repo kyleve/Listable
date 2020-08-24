@@ -202,6 +202,21 @@ public final class DemosRootViewController : ListViewController
             )
         }
         
+        list("bugs") { section in
+            
+            section.header = HeaderFooter(
+                DemoHeader(title: "Bug Examples")
+            )
+            
+            section += Item(
+                DemoItem(text: "Settings Applet Reordering"),
+                selectionStyle: .selectable(),
+                onSelect : { _ in
+                    self.push(SettingsAppletErrorViewController())
+                }
+            )
+        }
+        
         list("collection-view") { section in
             
             section.header = HeaderFooter(

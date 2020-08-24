@@ -653,6 +653,8 @@ public final class ListView : UIView
         for reason : PresentationState.UpdateReason,
         completion callerCompletion : @escaping (Bool) -> ()
     ) {
+        precondition(Thread.isMainThread, "Must only update UIKit views from the main thread. Instead, was on `\(Thread.current)`.")
+        
         // Figure out visible content.
         
         let presentationState = self.storage.presentationState
@@ -664,6 +666,8 @@ public final class ListView : UIView
         let diff = SignpostLogger.log(log: .updateContent, name: "Diff Content", for: self) {
             ListView.diffWith(old: presentationState.sectionModels, new: visibleSlice.content.sections)
         }
+        
+        self.validateCollectionViewDiff(with: diff)
 
         let updateCallbacks = UpdateCallbacks(.queue)
         
@@ -720,6 +724,65 @@ public final class ListView : UIView
                     actions: actions,
                     positionInfo: self.scrollPositionInfo
                 )
+            }
+        }
+    }
+    
+    private func validateCollectionViewDiff(with diff : SectionedDiff<Section, AnyIdentifier, AnyItem, AnyIdentifier>)
+    {
+        guard ListableDebugging.debugging.options.validatesCollectionViewDiff else {
+            return
+        }
+        
+        /// Apply the calculated diff to the old content to verify that it indeed turns it into the
+        /// new content we were vended by the developer. If these line up, in theory,
+        /// the diff was computed correctly.
+        
+        let calculatedNew : [Section] = diff.changes.transform(
+            old: diff.old,
+            removed: { _, _ in },
+            added: { $0 },
+            moved: { (old, new, changes, section) in
+                section.items = changes.transform(
+                    old: old.items,
+                    removed: { _, _ in },
+                    added:  { $0 },
+                    moved: { (old, new, item) in
+                        item = new
+                    },
+                    updated: { (old, new, item) in
+                        item = new
+                    },
+                    noChange: { (old, new, item) in
+                        item = new
+                    }
+                )
+            },
+            noChange: { (old, new, changes, section) in
+                section.items = changes.transform(
+                    old: old.items,
+                    removed: { _, _ in },
+                    added:  { $0 },
+                    moved: { (old, new, item) in
+                        item = new
+                    },
+                    updated: { (old, new, item) in
+                        item = new
+                    },
+                    noChange: { (old, new, item) in
+                        item = new
+                    }
+                )
+            }
+        )
+        
+        precondition(diff.new.count == calculatedNew.count)
+        
+        for (actual, calculated) in zip(diff.new, calculatedNew) {
+            precondition(actual.items.count == calculated.items.count)
+            
+            for (actualItem, calculatedItem) in zip(actual.items, calculated.items) {
+                precondition(actualItem.identifier == calculatedItem.identifier)
             }
         }
     }
@@ -802,28 +865,18 @@ public final class ListView : UIView
         
         let view = self.collectionView
         
-        let changes = CollectionViewChanges(sectionChanges: diff.changes)
+        let changes = CollectionViewChanges(
+            sectionChanges: diff.changes,
+            
+            /// Moves are treated as deletes + insertions, because if they result in no-op
+            /// changes, they can be erroneously removed: https://twitter.com/numist/status/1297273548042416128
+            transformMovesIntoDeletesAndInserts: true
+        )
             
         let batchUpdates = {
             updateBackingData()
             
-            // Sections
-
-            view.deleteSections(IndexSet(changes.deletedSections.map { $0.oldIndex }))
-            view.insertSections(IndexSet(changes.insertedSections.map { $0.newIndex }))
-            
-            changes.movedSections.forEach {
-                view.moveSection($0.oldIndex, toSection: $0.newIndex)
-            }
-
-            // Items
-            
-            view.deleteItems(at: changes.deletedItems.map { $0.oldIndex })
-            view.insertItems(at: changes.insertedItems.map { $0.newIndex })
-            
-            changes.movedItems.forEach {
-                view.moveItem(at: $0.oldIndex, to: $0.newIndex)
-            }
+            changes.apply(to: self.collectionView)
             
             self.visibleContent.updateVisibleViews()
         }
