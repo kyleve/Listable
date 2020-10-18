@@ -17,6 +17,9 @@ public struct Content
     /// You don't need to set this value – but if you do, and change it to another value,
     /// the list will reload without animation.
     public var identifier : AnyHashable?
+    
+    ///
+    public var pagingBehavior : PagingBehavior
 
     /// The refresh control, if any, associated with the list.
     public var refreshControl : RefreshControl?
@@ -95,6 +98,7 @@ public struct Content
     /// All parameters are optional, pass only what you need to customize.
     public init(
         identifier : AnyHashable? = nil,
+        pagingBehavior : PagingBehavior = .paged(),
         refreshControl : RefreshControl? = nil,
         header : AnyHeaderFooter? = nil,
         footer : AnyHeaderFooter? = nil,
@@ -102,7 +106,7 @@ public struct Content
         sections : [Section] = []
     ) {
         self.identifier = identifier
-        
+        self.pagingBehavior = pagingBehavior
         
         self.refreshControl = refreshControl
         
@@ -244,15 +248,59 @@ public struct Content
     {
         self += Section(identifier, build: build)
     }
+}
+
+
+public extension Content
+{
+    ///
+    enum PagingBehavior : Equatable
+    {
+        ///
+        case paged(at: Int = 250)
+        
+        ///
+        case includeAllContent
+        
+        
+        func pageSize(with itemCount : Int) -> Int {
+            switch self {
+            case .paged(let size): return size
+            case .includeAllContent: return itemCount
+            }
+        }
+    }
+}
+
+
+internal extension Content
+{
+    struct Slice
+    {
+        let containsAllItems : Bool
+        let content : Content
+        
+        init(containsAllItems : Bool, content : Content)
+        {
+            self.containsAllItems = containsAllItems
+            self.content = content
+        }
+        
+        init()
+        {
+            self.containsAllItems = true
+            self.content = Content()
+        }
+    }
     
     /// Removes the `Item` at the given `IndexPath`.
-    internal mutating func remove(at indexPath : IndexPath)
+    mutating func remove(at indexPath : IndexPath)
     {
         self.sections[indexPath.section].items.remove(at: indexPath.item)
     }
     
     /// Inserts the `Item` at the given `IndexPath`.
-    internal mutating func insert(item : AnyItem, at indexPath : IndexPath)
+    mutating func insert(item : AnyItem, at indexPath : IndexPath)
     {
         self.sections[indexPath.section].items.insert(item, at: indexPath.item)
     }
@@ -269,11 +317,11 @@ public struct Content
     /// enough to render the list to its current scroll position, plus some overscroll. This allows pretty significant performance
     /// optimizations for long lists that are not scrolled to the bottom, by culling most items.
     ///
-    internal func sliceTo(indexPath : IndexPath, plus additionalItems : Int = Content.Slice.defaultCount) -> Slice
+    func sliceTo(indexPath : IndexPath) -> Slice
     {
         var sliced = self
         
-        var remaining : Int = indexPath.item + additionalItems
+        var remaining : Int = indexPath.item + self.pagingBehavior.pageSize(with: self.itemCount)
         
         sliced.sections = self.sections.compactMapWithIndex { sectionIndex, _, section in
             if sectionIndex < indexPath.section {
@@ -295,29 +343,5 @@ public struct Content
             containsAllItems: self.itemCount == sliced.itemCount,
             content: sliced
         )
-    }
-}
-
-
-internal extension Content
-{
-    struct Slice
-    {
-        static let defaultCount : Int = 250
-        
-        let containsAllItems : Bool
-        let content : Content
-        
-        init(containsAllItems : Bool, content : Content)
-        {
-            self.containsAllItems = containsAllItems
-            self.content = content
-        }
-        
-        init()
-        {
-            self.containsAllItems = true
-            self.content = Content()
-        }
     }
 }

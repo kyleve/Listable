@@ -10,6 +10,11 @@ import os.signpost
 
 /// Log types available within Listable.
 extension OSLog {
+    static let contentBuilding = OSLog(
+        subsystem: "com.kve.Listable",
+        category: "ListView Content Building"
+    )
+    
     static let updateContent = OSLog(
         subsystem: "com.kve.Listable",
         category: "ListView Update"

@@ -84,10 +84,11 @@ fileprivate struct XcodePreviewDemoContent : BlueprintItemContent, Equatable
     }
 }
 
+
 #if DEBUG && canImport(SwiftUI) && !arch(i386) && !arch(arm)
 
 @available(iOS 13.0, *)
-struct ElementPreview : PreviewProvider {
+struct XcodePreviewDemo_Preview : PreviewProvider {
     static var previews: some View {
         ItemPreview.withAllItemStates(
             for: Item(XcodePreviewDemoContent(

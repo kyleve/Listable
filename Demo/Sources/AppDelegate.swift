@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BlueprintUI
 
 
 @UIApplicationMain
@@ -17,7 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = UINavigationController(rootViewController: DemosRootViewController())
+        
+        let vc = UIViewController()
+        vc.view = BlueprintView(element: BasicExample())
+        
+        window.rootViewController = vc
         
         self.window = window
         

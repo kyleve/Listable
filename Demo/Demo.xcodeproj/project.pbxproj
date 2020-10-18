@@ -11,6 +11,8 @@
 		0A0E070423870A5700DDD27D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0A0E070323870A5700DDD27D /* README.md */; };
 		0A49210424E5E11300D17038 /* AccordionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49210324E5E11300D17038 /* AccordionViewController.swift */; };
 		0A5DC1A924F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5DC1A824F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift */; };
+		0A5E887A25350FD900D26145 /* Code.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E887925350FD900D26145 /* Code.swift */; };
+		0A5E88802536911200D26145 /* BasicExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5E887F2536911200D26145 /* BasicExample.swift */; };
 		0A793B5824E4B53500850139 /* ManualSelectionManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A793B5724E4B53500850139 /* ManualSelectionManagementViewController.swift */; };
 		0A87BA652463567B0047C3B5 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 0A87BA642463567B0047C3B5 /* CHANGELOG.md */; };
 		0AA4D9B9248064A300CF95A5 /* CustomLayoutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4D9A8248064A200CF95A5 /* CustomLayoutsViewController.swift */; };
@@ -49,6 +51,8 @@
 		0A0E070323870A5700DDD27D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0A49210324E5E11300D17038 /* AccordionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccordionViewController.swift; sourceTree = "<group>"; };
 		0A5DC1A824F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListAppearsAfterKeyboardViewController.swift; sourceTree = "<group>"; };
+		0A5E887925350FD900D26145 /* Code.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Code.swift; sourceTree = "<group>"; };
+		0A5E887F2536911200D26145 /* BasicExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicExample.swift; sourceTree = "<group>"; };
 		0A793B5724E4B53500850139 /* ManualSelectionManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSelectionManagementViewController.swift; sourceTree = "<group>"; };
 		0A87BA642463567B0047C3B5 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		0AA4D9A8248064A200CF95A5 /* CustomLayoutsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLayoutsViewController.swift; sourceTree = "<group>"; };
@@ -108,9 +112,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0A5E887625350FCE00D26145 /* Dev Summit */ = {
+			isa = PBXGroup;
+			children = (
+				0A5E887925350FD900D26145 /* Code.swift */,
+				0A5E887F2536911200D26145 /* BasicExample.swift */,
+			);
+			path = "Dev Summit";
+			sourceTree = "<group>";
+		};
 		0AA4D9A7248064A200CF95A5 /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				0A5E887625350FCE00D26145 /* Dev Summit */,
 				0AA4D9AD248064A300CF95A5 /* DemosRootViewController.swift */,
 				0ADC3B3424907C80008DF2C0 /* XcodePreviewDemo.swift */,
 				0AA4D9CA248064AE00CF95A5 /* Demo Screens */,
@@ -436,6 +450,7 @@
 				0AA4D9C9248064A300CF95A5 /* CollectionViewBasicDemoViewController.swift in Sources */,
 				0AA4D9BC248064A300CF95A5 /* KeyboardTestingViewController.swift in Sources */,
 				0AA4D9C1248064A300CF95A5 /* CoordinatorViewController.swift in Sources */,
+				0A5E887A25350FD900D26145 /* Code.swift in Sources */,
 				0A49210424E5E11300D17038 /* AccordionViewController.swift in Sources */,
 				0AA4D9B9248064A300CF95A5 /* CustomLayoutsViewController.swift in Sources */,
 				0AA4D9C3248064A300CF95A5 /* CollectionViewAppearance.swift in Sources */,
@@ -445,6 +460,7 @@
 				0ACF96D624A0094D0090EAC4 /* ItemInsertAndRemoveAnimationsViewController.swift in Sources */,
 				0AA4D9C7248064A300CF95A5 /* CollectionViewDictionaryDemoViewController.swift in Sources */,
 				0ADC3B3524907C80008DF2C0 /* XcodePreviewDemo.swift in Sources */,
+				0A5E88802536911200D26145 /* BasicExample.swift in Sources */,
 				0AA4D9C4248064A300CF95A5 /* ItemizationEditorViewController.swift in Sources */,
 				0AA4D9BA248064A300CF95A5 /* FlowLayoutViewController.swift in Sources */,
 				0AC2A1962489F93E00779459 /* PagedViewController.swift in Sources */,

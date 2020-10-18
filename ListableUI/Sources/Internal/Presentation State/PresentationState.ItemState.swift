@@ -14,6 +14,7 @@ protocol AnyPresentationItemState : AnyObject
     func setAndPerform(isDisplayed: Bool)
     
     var itemPosition : ItemPosition { get set }
+    var direction : LayoutDirection { get set }
     
     var anyModel : AnyItem { get }
     
@@ -21,9 +22,9 @@ protocol AnyPresentationItemState : AnyObject
         
     var cellRegistrationInfo : (class:AnyClass, reuseIdentifier:String) { get }
     
-    func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath) -> UICollectionViewCell
+    func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath, direction: LayoutDirection) -> UICollectionViewCell
     
-    func applyTo(cell anyCell : UICollectionViewCell, itemState : ListableUI.ItemState, reason : ApplyReason)
+    func applyTo(cell anyCell : UICollectionViewCell, itemState : ListableUI.ItemState, direction: LayoutDirection, reason : ApplyReason)
     func applyToVisibleCell()
         
     func setNew(item anyItem : AnyItem, reason : PresentationState.ItemUpdateReason, updateCallbacks : UpdateCallbacks)
@@ -84,6 +85,7 @@ extension PresentationState
         let reorderingActions: ReorderingActions
         
         var itemPosition : ItemPosition
+        var direction: LayoutDirection
         
         let storage : Storage
                 
@@ -91,6 +93,7 @@ extension PresentationState
         {            
             self.reorderingActions = ReorderingActions()
             self.itemPosition = .single
+            self.direction = .vertical
         
             self.cellRegistrationInfo = (ItemCell<Content>.self, model.reuseIdentifier.stringValue)
                         
@@ -193,7 +196,7 @@ extension PresentationState
         
         var cellRegistrationInfo : (class:AnyClass, reuseIdentifier:String)
         
-        func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath) -> UICollectionViewCell
+        func dequeueAndPrepareCollectionViewCell(in collectionView : UICollectionView, for indexPath : IndexPath, direction: LayoutDirection) -> UICollectionViewCell
         {
             let anyCell = collectionView.dequeueReusableCell(withReuseIdentifier: self.cellRegistrationInfo.reuseIdentifier, for: indexPath)
             
@@ -206,26 +209,32 @@ extension PresentationState
             self.applyTo(
                 cell: cell,
                 itemState: itemState,
+                direction: direction,
                 reason: .willDisplay
             )
             
             return cell
         }
         
-        func applyTo(cell anyCell : UICollectionViewCell, itemState : ListableUI.ItemState, reason : ApplyReason)
+        func applyTo(cell anyCell : UICollectionViewCell, itemState : ListableUI.ItemState, direction: LayoutDirection, reason : ApplyReason)
         {
             let cell = anyCell as! ItemCell<Content>
             
             let applyInfo = ApplyItemContentInfo(
                 state: itemState,
                 position: self.itemPosition,
+                direction: direction,
                 reordering: self.reorderingActions
             )
             
             // Apply Model State
             
             self.model.content.apply(
-                to: ItemContentViews(content: cell.contentContainer.contentView, background: cell.background, selectedBackground: cell.selectedBackground),
+                to: ItemContentViews(
+                    content: cell.contentContainer.contentView,
+                    background: cell.background,
+                    selectedBackground: cell.selectedBackground
+                ),
                 for: reason,
                 with: applyInfo
             )
@@ -247,6 +256,7 @@ extension PresentationState
             self.applyTo(
                 cell: cell,
                 itemState: .init(cell: cell),
+                direction: self.direction,
                 reason: .wasUpdated
             )
         }
@@ -401,7 +411,12 @@ extension PresentationState
                 }, { cell in
                     let itemState = ListableUI.ItemState(isSelected: false, isHighlighted: false)
                     
-                    self.applyTo(cell: cell, itemState: itemState, reason: .willDisplay)
+                    self.applyTo(
+                        cell: cell,
+                        itemState: itemState,
+                        direction: info.direction,
+                        reason: .willDisplay
+                    )
                     
                     return self.model.sizing.measure(with: cell, info: info)
                 })

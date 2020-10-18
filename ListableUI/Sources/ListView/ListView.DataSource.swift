@@ -11,6 +11,8 @@ internal extension ListView
     final class DataSource : NSObject, UICollectionViewDataSource
     {
         unowned var presentationState : PresentationState!
+        
+        var directionProvider : () -> LayoutDirection = { fatalError() }
 
         func numberOfSections(in collectionView: UICollectionView) -> Int
         {
@@ -30,7 +32,11 @@ internal extension ListView
             
             self.presentationState.registerCell(for: item, in: collectionView)
             
-            return item.dequeueAndPrepareCollectionViewCell(in: collectionView, for: indexPath)
+            return item.dequeueAndPrepareCollectionViewCell(
+                in: collectionView,
+                for: indexPath,
+                direction: self.directionProvider()
+            )
         }
         
         private let headerFooterReuseCache = ReusableViewCache()

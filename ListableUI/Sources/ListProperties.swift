@@ -123,7 +123,7 @@ public struct ListProperties
     /// When a new instance is provided, the old one becomes a no-op instance; calling
     /// methods on it will have no effect.
     ///
-    public var actions : ListActions?
+    public var actions : ListActions
     
     /// The auto scroll action to apply to the list. This allows you to
     /// scroll to a given item on insert depending on the current state
@@ -155,6 +155,7 @@ public struct ListProperties
             appearance: .init(),
             scrollInsets: .init(),
             behavior: .init(),
+            actions: .init(),
             autoScrollAction: .none,
             accessibilityIdentifier: nil,
             debuggingIdentifier: nil,
@@ -170,6 +171,7 @@ public struct ListProperties
         appearance : Appearance,
         scrollInsets : ScrollInsets,
         behavior : Behavior,
+        actions : ListActions,
         autoScrollAction : AutoScrollAction,
         accessibilityIdentifier: String?,
         debuggingIdentifier: String?,
@@ -180,6 +182,7 @@ public struct ListProperties
         self.appearance = appearance
         self.scrollInsets = scrollInsets
         self.behavior = behavior
+        self.actions = actions
         self.autoScrollAction = autoScrollAction
         self.accessibilityIdentifier = accessibilityIdentifier
         self.debuggingIdentifier = debuggingIdentifier
@@ -187,7 +190,9 @@ public struct ListProperties
         self.content = Content()
         self.stateObserver = ListStateObserver()
 
-        build(&self)
+        SignpostLogger.log(log: .contentBuilding, name: "Building List Properties") {
+            build(&self)
+        }
     }
     
     //

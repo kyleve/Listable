@@ -156,7 +156,7 @@ public struct ListStateObserver {
             return
         }
         
-        let actions = ListActions()
+        var actions = ListActions()
         actions.listView = listView
         
         let callbackInfo = makeInfo(actions)

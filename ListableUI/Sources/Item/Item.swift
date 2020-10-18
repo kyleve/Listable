@@ -6,15 +6,6 @@
 //
 
 
-public enum ItemPosition
-{
-    case single
-    
-    case first
-    case middle
-    case last
-}
-
 
 public protocol AnyItem : AnyItem_Internal
 {
@@ -41,7 +32,7 @@ public protocol AnyItem_Internal
 
 public struct Item<Content:ItemContent> : AnyItem
 {
-    public var identifier : AnyIdentifier
+    public let identifier : AnyIdentifier
     
     public var content : Content
     

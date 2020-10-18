@@ -100,9 +100,6 @@ struct ReorderItem : BlueprintItemContent, Equatable
         
         box.borderStyle = .solid(color: .white(0.9), width: 2.0)
         
-        return ListReorderGesture(
-            actions: info.reordering,
-            wrapping: box
-        )
+        return box.listReorderGesture(with: info.reordering)
     }
 }

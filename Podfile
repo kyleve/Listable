@@ -13,8 +13,8 @@ target 'Demo' do
 	pod 'BlueprintUILists', :path => 'BlueprintUILists.podspec', :testspecs => ['Tests']
 
 	# External Pods
-	pod 'BlueprintUI'
-	pod 'BlueprintUICommonControls'
+	pod 'BlueprintUI', :path => '~/Desktop/Development/Blueprint1/BlueprintUI.podspec'
+	pod 'BlueprintUICommonControls', :path => '~/Desktop/Development/Blueprint1/BlueprintUICommonControls.podspec'
 
 	# Internal Pods
 	pod 'EnglishDictionary', :path => 'Internal Pods/EnglishDictionary/EnglishDictionary.podspec'

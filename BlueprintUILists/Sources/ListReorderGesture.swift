@@ -59,7 +59,7 @@ public struct ListReorderGesture : Element
     public init(
         isEnabled : Bool = true,
         actions : ReorderingActions,
-        wrapping element : Element
+        wrapping element : () -> Element
     ) {
         self.isEnabled =  isEnabled
         
@@ -67,7 +67,7 @@ public struct ListReorderGesture : Element
         self.onMove = { actions.moved(with: $0) }
         self.onDone = { actions.end() }
         
-        self.element = element
+        self.element = element()
     }
 
     //
@@ -102,7 +102,7 @@ public extension Element
     /// Wraps the element in a re-order gesture.
     func listReorderGesture(with actions : ReorderingActions, isEnabled : Bool = true) -> Element
     {
-        ListReorderGesture(isEnabled: isEnabled, actions: actions, wrapping: self)
+        ListReorderGesture(isEnabled: isEnabled, actions: actions, wrapping: { self })
     }
 }
 

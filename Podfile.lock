@@ -1,6 +1,6 @@
 PODS:
-  - BlueprintUI (0.12.2)
-  - BlueprintUICommonControls (0.12.2):
+  - BlueprintUI (0.16.0)
+  - BlueprintUICommonControls (0.16.0):
     - BlueprintUI
   - BlueprintUILists (0.10.1):
     - BlueprintUI
@@ -17,8 +17,8 @@ PODS:
   - Snapshot/Tests (1.0.0.LOCAL)
 
 DEPENDENCIES:
-  - BlueprintUI
-  - BlueprintUICommonControls
+  - BlueprintUI (from `~/Desktop/Development/Blueprint1/BlueprintUI.podspec`)
+  - BlueprintUICommonControls (from `~/Desktop/Development/Blueprint1/BlueprintUICommonControls.podspec`)
   - BlueprintUILists (from `BlueprintUILists.podspec`)
   - BlueprintUILists/Tests (from `BlueprintUILists.podspec`)
   - EnglishDictionary (from `Internal Pods/EnglishDictionary/EnglishDictionary.podspec`)
@@ -27,12 +27,11 @@ DEPENDENCIES:
   - Snapshot (from `Internal Pods/Snapshot/Snapshot.podspec`)
   - Snapshot/Tests (from `Internal Pods/Snapshot/Snapshot.podspec`)
 
-SPEC REPOS:
-  trunk:
-    - BlueprintUI
-    - BlueprintUICommonControls
-
 EXTERNAL SOURCES:
+  BlueprintUI:
+    :path: "~/Desktop/Development/Blueprint1/BlueprintUI.podspec"
+  BlueprintUICommonControls:
+    :path: "~/Desktop/Development/Blueprint1/BlueprintUICommonControls.podspec"
   BlueprintUILists:
     :path: BlueprintUILists.podspec
   EnglishDictionary:
@@ -43,13 +42,13 @@ EXTERNAL SOURCES:
     :path: Internal Pods/Snapshot/Snapshot.podspec
 
 SPEC CHECKSUMS:
-  BlueprintUI: 8b1c1cfd7ed73444ebfb66b54ad539cec6b600d9
-  BlueprintUICommonControls: 31bfe6642633a1fde476bc566c565f5473343427
+  BlueprintUI: e0caa063575bc925ce4ebb1028190f0c73c35231
+  BlueprintUICommonControls: d55b5d64320d68c29f216ca9e1e0c992c01247e8
   BlueprintUILists: bdb3f05677910ff21b6249826f7f40234ce68fcc
   EnglishDictionary: f03968b9382ddc5c8dd63535efbf783c6cd45f1c
   ListableUI: 3161a831bd644b1dbb3bc981902aca0b55ad7b7d
   Snapshot: cda3414db426919d09f775434b36289c8e864183
 
-PODFILE CHECKSUM: c1209f66d9213201c70fd26a2f0907a6e29e8cbe
+PODFILE CHECKSUM: fda981d43c7dcaf99ce867561a3c84d70b9e0061
 
 COCOAPODS: 1.9.3

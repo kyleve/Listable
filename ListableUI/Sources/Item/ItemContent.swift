@@ -225,8 +225,15 @@ public struct ApplyItemContentInfo
     /// The position of the item within its section.
     public var position : ItemPosition
     
+    /// Which direction the item is being laid out in.
+    public var direction : LayoutDirection
+    
     /// Provides access to actions to handle re-ordering the content within the list.
     public var reordering : ReorderingActions
+    
+    public var listCorners : UIRectCorner {
+        self.position.listCorners(for: self.direction)
+    }
 }
 
 

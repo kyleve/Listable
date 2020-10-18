@@ -51,6 +51,8 @@ public final class ListView : UIView
         
         self.stateObserver = ListStateObserver()
         
+        self.actions = ListActions()
+        
         self.collectionView.isPrefetchingEnabled = false
                 
         self.collectionView.dataSource = self.dataSource
@@ -63,8 +65,14 @@ public final class ListView : UIView
         // Associate ourselves with our child objects.
 
         self.collectionView.view = self
+        
+        self.actions.listView = self
 
         self.dataSource.presentationState = self.storage.presentationState
+        
+        self.dataSource.directionProvider = { [weak self] in
+            self?.layoutManager.collectionViewLayout.layout.direction ?? .vertical
+        }
         
         self.delegate.view = self
         self.delegate.presentationState = self.storage.presentationState
@@ -298,11 +306,10 @@ public final class ListView : UIView
     /// Allows registering a `ListActions` object associated
     /// with the list view that allows you to perform actions such as scrolling to
     /// items, or controlling view appearance transitions.
-    private var actions : ListActions? {
+    private var actions : ListActions {
         didSet {
-            oldValue?.listView = nil
-            
-            self.actions?.listView = self
+            oldValue.listView = nil
+            self.actions.listView = self
         }
     }
     
@@ -449,6 +456,7 @@ public final class ListView : UIView
             appearance: self.appearance,
             scrollInsets: self.scrollInsets,
             behavior: self.behavior,
+            actions: self.actions,
             autoScrollAction: self.autoScrollAction,
             accessibilityIdentifier: self.collectionView.accessibilityIdentifier,
             debuggingIdentifier: self.debuggingIdentifier,

@@ -102,6 +102,7 @@ public struct EmbeddedList : ItemContent
             },
             scrollInsets: .init(),
             behavior: .init(),
+            actions: .init(),
             autoScrollAction: .none,
             accessibilityIdentifier: nil,
             debuggingIdentifier: nil,
