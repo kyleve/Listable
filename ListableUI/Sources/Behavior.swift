@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 /// Controls various behaviors of the list view, such as keyboard dismissal, selection mode, and behavior
 /// when the list content underflows the available space in the list view.

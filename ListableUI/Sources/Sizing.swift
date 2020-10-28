@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 ///
 /// Controls how a header, footer, or item in a list view is sized.
@@ -66,7 +66,7 @@ public enum Sizing : Hashable
     /// The returned value is `ceil()`'d to round up to the next full integer value.
     func measure(with view : UIView, info : MeasureInfo) -> CGSize
     {
-        let value : CGSize = {
+        let size : CGSize = {
             switch self {
             case .default:
                 return info.defaultSize
@@ -93,10 +93,33 @@ public enum Sizing : Hashable
             }
         }()
         
+        self.validateMeasuredSize(size, with: info)
+        
         return CGSize(
-            width: ceil(value.width),
-            height: ceil(value.height)
+            width: ceil(size.width),
+            height: ceil(size.height)
         )
+    }
+    
+    private func validateMeasuredSize(_ size : CGSize, with info : MeasureInfo) {
+        
+        // Ensure we have a reasonably valid size for the cell.
+        
+        let reasonableMaxHeight : CGFloat = 10_000
+        
+        switch info.direction {
+        case .vertical:
+            precondition(
+                size.height <= reasonableMaxHeight,
+                "The height of the view was outside of reasonable expectations, and this is likely programmer error. Height: \(size.height). Your sizeThatFits or autolayout constraints are likely incorrect."
+            )
+            
+        case .horizontal:
+            precondition(
+                size.width <= reasonableMaxHeight,
+                "The width of the view was outside of reasonable expectations, and this is likely programmer error. Height: \(size.width). Your sizeThatFits or autolayout constraints are likely incorrect."
+            )
+        }
     }
 }
 

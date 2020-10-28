@@ -5,6 +5,8 @@
 //  Created by Kyle Van Essen on 8/10/19.
 //
 
+import Foundation
+import UIKit
 
 public enum ItemPosition
 {

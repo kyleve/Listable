@@ -5,6 +5,7 @@
 //  Created by Kyle Van Essen on 7/22/19.
 //
 
+import UIKit
 
 /// A class used to manage the "live" / mutable state of the visible items in the list,
 /// which is persistent across diffs of content (instances are only created or destroyed when an item enters or leaves the list).

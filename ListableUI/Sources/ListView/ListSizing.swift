@@ -5,6 +5,7 @@
 //  Created by Kyle Van Essen on 9/21/20.
 //
 
+import UIKit
 
 ///
 /// Provides the possible options for how to size and measure a list when its measured size is queried

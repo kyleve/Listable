@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 ///
 /// The `ListProperties` object describes all of the given values needed to configure

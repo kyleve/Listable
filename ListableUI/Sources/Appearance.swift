@@ -5,6 +5,7 @@
 //  Created by Kyle Van Essen on 10/17/19.
 //
 
+import UIKit
 
 ///
 /// Contains all the properties which affect the appearance of all possible kinds of list layouts.

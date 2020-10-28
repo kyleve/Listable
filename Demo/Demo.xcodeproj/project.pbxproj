@@ -11,6 +11,7 @@
 		0A0E070423870A5700DDD27D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 0A0E070323870A5700DDD27D /* README.md */; };
 		0A49210424E5E11300D17038 /* AccordionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A49210324E5E11300D17038 /* AccordionViewController.swift */; };
 		0A5DC1A924F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A5DC1A824F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift */; };
+		0A66420B254A317A007F6B2F /* AutoLayoutDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A66420A254A317A007F6B2F /* AutoLayoutDemoViewController.swift */; };
 		0A793B5824E4B53500850139 /* ManualSelectionManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A793B5724E4B53500850139 /* ManualSelectionManagementViewController.swift */; };
 		0A87BA652463567B0047C3B5 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 0A87BA642463567B0047C3B5 /* CHANGELOG.md */; };
 		0AA4D9B9248064A300CF95A5 /* CustomLayoutsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4D9A8248064A200CF95A5 /* CustomLayoutsViewController.swift */; };
@@ -50,6 +51,7 @@
 		0A0E070323870A5700DDD27D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		0A49210324E5E11300D17038 /* AccordionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccordionViewController.swift; sourceTree = "<group>"; };
 		0A5DC1A824F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListAppearsAfterKeyboardViewController.swift; sourceTree = "<group>"; };
+		0A66420A254A317A007F6B2F /* AutoLayoutDemoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoLayoutDemoViewController.swift; sourceTree = "<group>"; };
 		0A793B5724E4B53500850139 /* ManualSelectionManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualSelectionManagementViewController.swift; sourceTree = "<group>"; };
 		0A87BA642463567B0047C3B5 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		0AA4D9A8248064A200CF95A5 /* CustomLayoutsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLayoutsViewController.swift; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				0A49210324E5E11300D17038 /* AccordionViewController.swift */,
+				0A66420A254A317A007F6B2F /* AutoLayoutDemoViewController.swift */,
 				0AA4D9B4248064A300CF95A5 /* AutoScrollingViewController.swift */,
 				0AA4D9AC248064A300CF95A5 /* BlueprintListDemoViewController.swift */,
 				0AA4D9B2248064A300CF95A5 /* CollectionViewAppearance.swift */,
@@ -434,6 +437,7 @@
 				0A5DC1A924F6FD4200DC7C14 /* ListAppearsAfterKeyboardViewController.swift in Sources */,
 				0A07119324BA798400CDF65D /* ListStateViewController.swift in Sources */,
 				0AA4D9C0248064A300CF95A5 /* InvoicesPaymentScheduleDemoViewController.swift in Sources */,
+				0A66420B254A317A007F6B2F /* AutoLayoutDemoViewController.swift in Sources */,
 				0AEB96E222FBCC1D00341DFF /* AppDelegate.swift in Sources */,
 				0A793B5824E4B53500850139 /* ManualSelectionManagementViewController.swift in Sources */,
 				0AA4D9C9248064A300CF95A5 /* CollectionViewBasicDemoViewController.swift in Sources */,

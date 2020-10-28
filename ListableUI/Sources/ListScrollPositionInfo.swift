@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 /// Information about the current scroll position of a list,

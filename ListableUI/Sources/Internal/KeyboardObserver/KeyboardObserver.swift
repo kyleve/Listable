@@ -55,7 +55,7 @@ final class KeyboardObserver {
     
     /// Allow logging to the console if app startup-timed shared instance startup did not
     /// occur; this could cause bugs for the reasons outlined above.
-    fileprivate static var didSetupSharedInstanceDuringAppStartup = false
+    static var didSetupSharedInstanceDuringAppStartup = false
     
     private let center : NotificationCenter
     
@@ -261,19 +261,6 @@ extension KeyboardObserver {
             while the keyboard is already visible.
             """
         )
-    }
-}
-
-
-/// An Objective-C accessible class that lets us set up the shared
-/// observer on app startup, without needing to make `KeyboardObserver` Objective-C
-/// accessible and public. See `SetupKeyboardObserverOnAppStartup.m` for more.
-@objc public final class __LST_KeyboardObserver_ObjCAccess : NSObject
-{
-    @objc public static func __setupSharedInstance() {
-        _ = KeyboardObserver.shared
-        
-        KeyboardObserver.didSetupSharedInstanceDuringAppStartup = true
     }
 }
 

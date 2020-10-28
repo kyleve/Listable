@@ -170,13 +170,39 @@ final class SupplementaryContainerView : UICollectionReusableView
     // MARK: UIView
     //
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize
-    {
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        
         guard let content = self.content else {
             return .zero
         }
         
         return content.sizeThatFits(size)
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
+        
+        guard let content = self.content else {
+            return .zero
+        }
+        
+        return content.systemLayoutSizeFitting(targetSize)
+    }
+    
+    override func systemLayoutSizeFitting(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+        verticalFittingPriority: UILayoutPriority
+    ) -> CGSize {
+        
+        guard let content = self.content else {
+            return .zero
+        }
+        
+        return content.systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: horizontalFittingPriority,
+            verticalFittingPriority: verticalFittingPriority
+        )
     }
     
     override func layoutSubviews()

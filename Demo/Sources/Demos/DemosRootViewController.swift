@@ -152,6 +152,13 @@ public final class DemosRootViewController : ListViewController
                 onSelect: { _ in
                     self.push(AccordionViewController())
             })
+            
+            section += Item(
+                DemoItem(text: "Using Autolayout"),
+                selectionStyle: .selectable(),
+                onSelect : { _ in
+                    self.push(AutoLayoutDemoViewController())
+            })
         }
         
         list("layouts") { section in

@@ -5,8 +5,8 @@
 //  Created by Kyle Van Essen on 8/24/20.
 //
 
-@import Foundation;
-@import UIKit;
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #if __has_include (<ListableUI/ListableUI-Swift.h>)
     #import <ListableUI/ListableUI-Swift.h>

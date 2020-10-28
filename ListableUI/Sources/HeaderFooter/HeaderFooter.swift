@@ -5,6 +5,7 @@
 //  Created by Kyle Van Essen on 8/10/19.
 //
 
+import UIKit
 
 public protocol AnyHeaderFooter : AnyHeaderFooter_Internal
 {

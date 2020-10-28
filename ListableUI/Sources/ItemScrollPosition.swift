@@ -5,6 +5,8 @@
 //  Created by Kyle Van Essen on 11/5/19.
 //
 
+import UIKit
+
 /// Specifies how to position an item in a list when requesting the list scrolls to it.
 ///
 /// You can specify a position (top, center, bottom), what to do if the

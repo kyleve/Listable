@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 
 ///
 /// A class which provides an easy way to set up and display a `ListView`,

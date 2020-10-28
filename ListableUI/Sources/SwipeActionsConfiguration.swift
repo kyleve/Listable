@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 
 /// Use SwipeActionsConfiguration to configure an item with SwipeActions.

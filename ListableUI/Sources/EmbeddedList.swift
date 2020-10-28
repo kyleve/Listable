@@ -5,6 +5,7 @@
 //  Created by Kyle Van Essen on 11/10/19.
 //
 
+import UIKit
 
 public extension Item where Content == EmbeddedList
 {

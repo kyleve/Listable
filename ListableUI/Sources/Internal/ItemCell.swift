@@ -84,9 +84,24 @@ final class ItemCell<Content:ItemContent> : UICollectionViewCell
     
     // MARK: UIView
     
-    override func sizeThatFits(_ size: CGSize) -> CGSize
-    {
-        return self.contentContainer.contentView.sizeThatFits(size)
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        self.contentContainer.contentView.sizeThatFits(size)
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize) -> CGSize {
+        self.contentContainer.contentView.systemLayoutSizeFitting(targetSize)
+    }
+    
+    override func systemLayoutSizeFitting(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+        verticalFittingPriority: UILayoutPriority
+    ) -> CGSize {
+        self.contentContainer.contentView.systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: horizontalFittingPriority,
+            verticalFittingPriority: verticalFittingPriority
+        )
     }
 
     override func layoutSubviews()

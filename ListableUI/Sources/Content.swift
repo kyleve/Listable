@@ -5,6 +5,7 @@
 //  Created by Kyle Van Essen on 6/21/19.
 //
 
+import UIKit
 
 
 public struct Content
