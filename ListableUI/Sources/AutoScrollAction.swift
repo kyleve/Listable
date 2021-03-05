@@ -10,12 +10,9 @@ import Foundation
 
 /// Options for auto-scrolling to items when the list is updated.
 public enum AutoScrollAction {
-    
-    /// The list never automatically scrolls.
-    case none
 
     /// Scrolls to the specified item when the list is updated if the item was inserted in this update.
-    case scrollToItem(onInsertOf: OnInsertedItem)
+    case onInsert(OnInsert)
 
     /// Scrolls to the specified item when the list is updated if the item was inserted in this update.
     ///
@@ -45,27 +42,26 @@ public enum AutoScrollAction {
     /// ```
     /// - Parameters
     ///     - destination: Where the list should scroll to on insert. If not specified, the value passed to `onInsertOf` will be used.
-    ///     - onInsertOf: The identifier which should trigger the action.
     ///     - position: The position to scroll the list to.
     ///     - animation: The animation type to perform. Note: Will only animate if the list update itself is animated.
     ///     - shouldPerform: A block which lets you control if the auto scroll action should be performed based on the state of the list.
     ///     - didPerform: A block which is called when the action is performed. If the item causing insertion is inserted multiple times,
     ///     this block will be called multiple times.
     ///
-    public static func scrollTo(
-        _ destination : ScrollDestination? = nil,
-        onInsertOf insertedIdentifier: AnyIdentifier,
+    public static func onInsert(
+        scrollTo destination : ScrollDestination? = nil,
         position: ScrollPosition,
         animation: ScrollAnimation = .none,
+        priority : Int = 0,
         shouldPerform : @escaping (ListScrollPositionInfo) -> Bool = { _ in true },
         didPerform : @escaping (ListScrollPositionInfo) -> () = { _ in }
     ) -> AutoScrollAction
     {
-        .scrollToItem(onInsertOf: .init(
-            destination: destination ?? .item(insertedIdentifier),
-            insertedIdentifier: insertedIdentifier,
+        .onInsert(.init(
+            destination: destination,
             position: position,
             animation: animation,
+            priority : priority,
             shouldPerform: shouldPerform,
             didPerform: didPerform
         ))
@@ -98,13 +94,11 @@ extension AutoScrollAction
     
     
     /// Values used to configure the `scrollToItem(onInsertOf:)` action.
-    public struct OnInsertedItem
+    public struct OnInsert
     {
         /// The item in the list to scroll to when the `insertedIdentifier` is inserted.
-        public var destination : ScrollDestination
-        
-        /// The identifier of the item for which the `AutoScrollAction` should be performed.
-        public var insertedIdentifier : AnyIdentifier
+        /// If nil, the item will scroll to itself on insert.
+        public var destination : ScrollDestination?
         
         /// The desired scroll position,
         public var position : ScrollPosition
@@ -116,6 +110,10 @@ extension AutoScrollAction
         /// The action will only be animated if it is animated, **and** the list update itself is
         /// animated. Otherwise, no animation occurs.
         public var animation : ScrollAnimation
+        
+        /// If multiple `OnInsert` actions occur at once, the one with the highest priority will win.
+        /// If multiple inserted items have the same priority, the first one is used.
+        public var priority : Int
         
         /// An additional check you may provide to approve or reject the scroll action.
         public var shouldPerform : (ListScrollPositionInfo) -> Bool

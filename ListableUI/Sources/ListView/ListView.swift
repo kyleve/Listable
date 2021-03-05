@@ -21,7 +21,6 @@ public final class ListView : UIView, KeyboardObserverDelegate
         self.appearance = appearance
         
         self.behavior = Behavior()
-        self.autoScrollAction = .none
         self.scrollIndicatorInsets = .zero
         
         self.storage = Storage()
@@ -142,8 +141,6 @@ public final class ListView : UIView, KeyboardObserverDelegate
     //
             
     private var sourcePresenter : AnySourcePresenter
-
-    private var autoScrollAction : AutoScrollAction
     
     private let dataSource : DataSource
     
@@ -564,7 +561,6 @@ public final class ListView : UIView, KeyboardObserverDelegate
             appearance: self.appearance,
             scrollIndicatorInsets: self.scrollIndicatorInsets,
             behavior: self.behavior,
-            autoScrollAction: self.autoScrollAction,
             accessibilityIdentifier: self.collectionView.accessibilityIdentifier,
             debuggingIdentifier: self.debuggingIdentifier,
             configure: configure
@@ -579,7 +575,6 @@ public final class ListView : UIView, KeyboardObserverDelegate
         
         self.appearance = properties.appearance
         self.behavior = properties.behavior
-        self.autoScrollAction = properties.autoScrollAction
         self.scrollIndicatorInsets = properties.scrollIndicatorInsets
         self.collectionView.accessibilityIdentifier = properties.accessibilityIdentifier
         self.debuggingIdentifier = properties.debuggingIdentifier
@@ -848,7 +843,7 @@ public final class ListView : UIView, KeyboardObserverDelegate
         self.performBatchUpdates(with: diff, animated: reason.animated, updateBackingData: updateBackingData, completion: callerCompletion)
         
         // Perform any needed auto scroll actions.
-        self.performAutoScrollAction(with: diff.changes.addedItemIdentifiers, animated: reason.animated)
+        self.performAutoScrollActions(for: diff, animated: reason.animated)
 
         // Update info for new contents.
         
@@ -874,43 +869,73 @@ public final class ListView : UIView, KeyboardObserverDelegate
     
     private func newVisibleSlice(to indexPath : IndexPath) -> Content.Slice
     {
-        if self.bounds.isEmpty {
+        guard self.bounds.isEmpty == false else {
             return Content.Slice()
-        } else {
-            switch self.autoScrollAction {
-            case .scrollToItem(let insertInfo):
-                guard let autoScrollIndexPath = self.storage.allContent.firstIndexPath(for: insertInfo.insertedIdentifier) else {
-                    fallthrough
-                }
-
-                let greaterIndexPath = max(autoScrollIndexPath, indexPath)
-                return self.storage.allContent.sliceTo(indexPath: greaterIndexPath)
-
-            case .none:
-
-                return self.storage.allContent.sliceTo(indexPath: indexPath)
+        }
+        
+        let lastIndexPathWithInsertAction = self.storage.allContent.lastIndexPath {
+            if case .onInsert(_) = $0.autoScrollAction {
+                return true
+            } else {
+                return false
             }
         }
+        
+        let endIndexPath : IndexPath = {
+            if let last = lastIndexPathWithInsertAction {
+                return max(last, indexPath)
+            } else {
+                return indexPath
+            }
+        }()
+        
+        return self.storage.allContent.sliceTo(indexPath: endIndexPath)
     }
     
-    private func performAutoScrollAction(with addedItems : Set<AnyIdentifier>, animated : Bool)
+    private func performAutoScrollActions(for diff : ContentDiff, animated : Bool)
     {
-        switch self.autoScrollAction {
-        case .none:
-            return
-            
-        case .scrollToItem(let info):
-            let wasInserted = addedItems.contains(info.insertedIdentifier)
-            
-            if wasInserted && info.shouldPerform(self.scrollPositionInfo) {
+        let inserted : [AutoScrollAction.OnInsert] = diff
+            .changes
+            .insertedItems
+            .filter {
+                if case .onInsert = $0.value.autoScrollAction {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            .sorted {
+                $0.indexPath > $1.indexPath
+            }
+            .map(\.value)
+            .compactMap {
+                if case let .onInsert(onInsert) = $0.autoScrollAction {
+                    return onInsert
+                } else {
+                    return nil
+                }
+            }
+        
+        for inserted in inserted {
+            if inserted.shouldPerform(self.scrollPositionInfo) {
                 
                 /// Only animate the scroll if both the update **and** the scroll action are animated.
-                let animation = info.animation.and(with: animated)
+                let animation = inserted.animation.and(with: animated)
                 
-                if let destination = info.destination.destination(with: self.content) {
-                    self.scrollTo(item: destination, position: info.position, animation: animation) { _ in
-                        info.didPerform(self.scrollPositionInfo)
+                let destination : AnyIdentifier? = {
+                    if let destination = inserted.destination {
+                        return destination.destination(with: self.content)
+                    } else {
+                        fatalError()
                     }
+                }()
+                
+                if let destination = destination {
+                    self.scrollTo(item: destination, position: inserted.position, animation: animation) { _ in
+                        inserted.didPerform(self.scrollPositionInfo)
+                    }
+                    
+                    break
                 }
             }
         }
@@ -994,7 +1019,9 @@ public final class ListView : UIView, KeyboardObserverDelegate
         }
     }
     
-    private static func diffWith(old : [Section], new : [Section]) -> SectionedDiff<Section, AnyIdentifier, AnyItem, AnyIdentifier>
+    private typealias ContentDiff = SectionedDiff<Section, AnyIdentifier, AnyItem, AnyIdentifier>
+    
+    private static func diffWith(old : [Section], new : [Section]) -> ContentDiff
     {
         return SectionedDiff(
             old: old,

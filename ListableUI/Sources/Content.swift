@@ -160,6 +160,19 @@ public struct Content
         
         return nil
     }
+    
+    public func lastIndexPath(passing test : (AnyItem) -> Bool) -> IndexPath? {
+        
+        for (sectionIndex, section) in self.sections.reversed().enumerated() {
+            for (itemIndex, item) in section.items.reversed().enumerated() {
+                if test(item) {
+                    return IndexPath(item: itemIndex, section: sectionIndex)
+                }
+            }
+        }
+        
+        return nil
+    }
 
     /// Returns the `IndexPath` of the last `Item` in the content.
     /// Returns nil if there are no `Item`s in the content.

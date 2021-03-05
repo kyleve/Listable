@@ -86,8 +86,8 @@ struct SectionedDiff<Section, SectionIdentifier:Hashable, Item, ItemIdentifier:H
         let moved : [Moved]
         let noChange : [NoChange]
         
-        let addedItemIdentifiers : Set<ItemIdentifier>
-        let removedItemIdentifiers : Set<ItemIdentifier>
+        let insertedItems : Set<IdentifiedItem>
+        let removedItems : Set<IdentifiedItem>
         
         let sectionsChangeCount : Int
         let itemsChangeCount : Int
@@ -179,30 +179,51 @@ struct SectionedDiff<Section, SectionIdentifier:Hashable, Item, ItemIdentifier:H
             let hasChanges = itemsChangeCount > 0 || sectionsChangeCount > 0
             
             if hasChanges {
-                let oldIDs = Self.allItemIDs(in: old, configuration: configuration)
-                let newIDs = Self.allItemIDs(in: new, configuration: configuration)
+                let oldItems = Self.identifiedItems(in: old, configuration: configuration)
+                let newItems = Self.identifiedItems(in: new, configuration: configuration)
                 
-                self.addedItemIdentifiers = newIDs.subtracting(oldIDs)
-                self.removedItemIdentifiers = oldIDs.subtracting(newIDs)
+                self.insertedItems = newItems.subtracting(oldItems)
+                self.removedItems = oldItems.subtracting(newItems)
             } else {
-                self.addedItemIdentifiers = []
-                self.removedItemIdentifiers = []
+                self.insertedItems = []
+                self.removedItems = []
             }
             
             listablePrecondition(diff.updated.isEmpty, "Must not have any updates for sections; sections can only move.")
         }
         
-        private static func allItemIDs(in sections : [Section], configuration : Configuration) -> Set<ItemIdentifier> {
+        private static func identifiedItems(in sections : [Section], configuration : Configuration) -> Set<IdentifiedItem> {
             
-            var IDs = Set<ItemIdentifier>()
+            var items = Set<IdentifiedItem>()
             
-            for section in sections {
-                for item in configuration.section.items(section) {
-                    IDs.insert(configuration.item.identifier(item))
+            for (sectionIndex, section) in sections.enumerated() {
+                for (itemIndex, item) in configuration.section.items(section).enumerated() {
+                    items.insert(
+                        .init(
+                            identifier: configuration.item.identifier(item),
+                            indexPath: IndexPath(item: itemIndex, section: sectionIndex),
+                            value: item
+                        )
+                    )
                 }
             }
             
-            return IDs
+            return items
+        }
+        
+        struct IdentifiedItem : Hashable {
+            
+            let identifier : ItemIdentifier
+            let indexPath : IndexPath
+            let value : Item
+            
+            func hash(into hasher: inout Hasher) {
+                hasher.combine(self.identifier)
+            }
+            
+            static func == (lhs: Self, rhs: Self) -> Bool {
+                lhs.identifier == rhs.identifier
+            }
         }
         
         struct Added

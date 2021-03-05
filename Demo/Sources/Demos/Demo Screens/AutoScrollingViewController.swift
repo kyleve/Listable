@@ -62,14 +62,11 @@ final class AutoScrollingViewController : UIViewController
             list.appearance = .demoAppearance
             list.layout = .demoLayout
 
-            let items = self.items.map { Item($0) }
+            var items = self.items.map { Item($0) }
             list += Section("items", items: items)
-
-            if let last = items.last {
-                
-                list.autoScrollAction = .scrollTo(
-                    .lastItem,
-                    onInsertOf: last.identifier,
+            
+            items.mutateLast { last in
+                last.autoScrollAction = .onInsert(
                     position: .init(position: .bottom),
                     animation: .default,
                     shouldPerform: { info in

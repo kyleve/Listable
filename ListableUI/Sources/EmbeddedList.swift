@@ -80,7 +80,6 @@ public struct EmbeddedList : ItemContent
             },
             scrollIndicatorInsets: .init(),
             behavior: .init(),
-            autoScrollAction: .none,
             accessibilityIdentifier: nil,
             debuggingIdentifier: nil,
             configure: configure

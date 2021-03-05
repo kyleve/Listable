@@ -128,11 +128,6 @@ public struct ListProperties
     ///
     public var actions : ListActions?
     
-    /// The auto scroll action to apply to the list. This allows you to
-    /// scroll to a given item on insert depending on the current state
-    /// of the view.
-    public var autoScrollAction : AutoScrollAction
-    
     //
     // MARK: Identifiers
     //
@@ -158,7 +153,6 @@ public struct ListProperties
             appearance: .init(),
             scrollIndicatorInsets: .zero,
             behavior: .init(),
-            autoScrollAction: .none,
             accessibilityIdentifier: nil,
             debuggingIdentifier: nil,
             configure: configure
@@ -172,7 +166,6 @@ public struct ListProperties
         appearance : Appearance,
         scrollIndicatorInsets : UIEdgeInsets,
         behavior : Behavior,
-        autoScrollAction : AutoScrollAction,
         accessibilityIdentifier: String?,
         debuggingIdentifier: String?,
         configure : Configure
@@ -182,7 +175,6 @@ public struct ListProperties
         self.appearance = appearance
         self.scrollIndicatorInsets = scrollIndicatorInsets
         self.behavior = behavior
-        self.autoScrollAction = autoScrollAction
         self.accessibilityIdentifier = accessibilityIdentifier
         self.debuggingIdentifier = debuggingIdentifier
         

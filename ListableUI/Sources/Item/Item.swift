@@ -17,6 +17,8 @@ public struct Item<Content:ItemContent> : AnyItem
     
     public var selectionStyle : ItemSelectionStyle
     
+    public var autoScrollAction : AutoScrollAction?
+    
     public var insertAndRemoveAnimations : ItemInsertAndRemoveAnimations?
     
     public var swipeActions : SwipeActionsConfiguration?
@@ -58,6 +60,7 @@ public struct Item<Content:ItemContent> : AnyItem
         sizing : Sizing? = nil,
         layouts : ItemLayouts? = nil,
         selectionStyle : ItemSelectionStyle? = nil,
+        autoScrollAction : AutoScrollAction? = nil,
         insertAndRemoveAnimations : ItemInsertAndRemoveAnimations? = nil,
         swipeActions : SwipeActionsConfiguration? = nil,
         reordering : Reordering? = nil,
@@ -97,6 +100,8 @@ public struct Item<Content:ItemContent> : AnyItem
         } else {
             self.selectionStyle = .notSelectable
         }
+        
+        self.autoScrollAction = autoScrollAction
         
         if let insertAndRemoveAnimations = insertAndRemoveAnimations {
             self.insertAndRemoveAnimations = insertAndRemoveAnimations

@@ -185,8 +185,8 @@ extension ListStateObserver
                 )
                 
                 self.items = ChangedIDs(
-                    inserted: diff.changes.addedItemIdentifiers,
-                    removed: diff.changes.removedItemIdentifiers
+                    inserted: Set(diff.changes.insertedItems.map(\.identifier)),
+                    removed: Set(diff.changes.removedItems.map(\.identifier))
                 )
             }
             

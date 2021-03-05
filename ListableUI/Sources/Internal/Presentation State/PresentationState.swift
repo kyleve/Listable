@@ -14,36 +14,22 @@ final class PresentationState
     // MARK: Properties
     //
         
-    var refreshControl : RefreshControlState?
+    var refreshControl : RefreshControlState? = nil
     
     var header : HeaderFooterViewStatePair = .init()
     var footer : HeaderFooterViewStatePair = .init()
     var overscrollFooter : HeaderFooterViewStatePair = .init()
     
-    var sections : [PresentationState.SectionState]
-    
+    var sections : [PresentationState.SectionState] = []
+        
     var performsContentCallbacks : Bool = true
         
-    private(set) var containsAllItems : Bool
+    private(set) var containsAllItems : Bool = true
     
-    private(set) var contentIdentifier : AnyHashable?
+    private(set) var contentIdentifier : AnyHashable? = nil
     
     private let itemMeasurementCache = ReusableViewCache()
     private let headerFooterMeasurementCache = ReusableViewCache()
-    
-    //
-    // MARK: Initialization
-    //
-        
-    init()
-    {
-        self.refreshControl = nil
-        self.sections = []
-        
-        self.containsAllItems = true
-        
-        self.contentIdentifier = nil
-    }
     
     //
     // MARK: Accessing Data
