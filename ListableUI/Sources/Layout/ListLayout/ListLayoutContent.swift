@@ -114,10 +114,12 @@ public final class ListLayoutContent
         
         // Sections
         
-        for (sectionIndex, section) in self.sections.enumerated() {
+        BinarySearch.forEach(in: self.sections) { section in
+            .compare(frame: section.contentsFrame, in: rect, direction: .vertical) // TODO fixme: Not only vertical
+        } forEach: { sectionIndex, section in
             
             guard rect.intersects(section.contentsFrame) else {
-                continue
+                return false
             }
             
             // Section Header
@@ -128,9 +130,14 @@ public final class ListLayoutContent
             
             // Items
             
-            for item in section.items {
+            BinarySearch.forEach(in: section.items) { item in
+                .compare(frame: item.frame, in: rect, direction: .vertical) // TODO fixme: Not only vertical
+            } forEach: { _, item in
                 if rect.intersects(item.frame) {
                     attributes.append(item.layoutAttributes(with: item.liveIndexPath))
+                    return true
+                } else {
+                    return false
                 }
             }
             
@@ -139,6 +146,8 @@ public final class ListLayoutContent
             if rect.intersects(section.footer.visibleFrame) {
                 attributes.append(section.footer.layoutAttributes(with: section.footer.kind.indexPath(in: sectionIndex)))
             }
+            
+            return true
         }
         
         // List Footer

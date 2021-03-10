@@ -230,6 +230,20 @@ public final class DemosRootViewController : ListViewController
             )
         }
         
+        list("performance") { section in
+            
+            section.header = HeaderFooter(
+                DemoHeader(title: "Performance")
+            )
+
+            section += Item(
+                DemoItem(text: "Long List"),
+                selectionStyle: .tappable,
+                onSelect : { _ in
+                    self.push(LongListPerformanceTestViewController())
+            })
+        }
+        
         list("collection-view") { section in
             
             section.header = HeaderFooter(

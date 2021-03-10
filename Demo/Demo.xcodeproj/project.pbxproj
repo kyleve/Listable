@@ -33,6 +33,7 @@
 		0AA4D9C8248064A300CF95A5 /* ReorderingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4D9B7248064A300CF95A5 /* ReorderingViewController.swift */; };
 		0AA4D9C9248064A300CF95A5 /* CollectionViewBasicDemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA4D9B8248064A300CF95A5 /* CollectionViewBasicDemoViewController.swift */; };
 		0AC2A1962489F93E00779459 /* PagedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2A1952489F93E00779459 /* PagedViewController.swift */; };
+		0AC8398E25EDF3AC0055CEF5 /* LongListPerformanceTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8398D25EDF3AC0055CEF5 /* LongListPerformanceTestViewController.swift */; };
 		0ACF96D624A0094D0090EAC4 /* ItemInsertAndRemoveAnimationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ACF96D524A0094D0090EAC4 /* ItemInsertAndRemoveAnimationsViewController.swift */; };
 		0AD6767A25423BE500A49315 /* MultiSelectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD6767925423BE500A49315 /* MultiSelectViewController.swift */; };
 		0ADC3B3524907C80008DF2C0 /* XcodePreviewDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADC3B3424907C80008DF2C0 /* XcodePreviewDemo.swift */; };
@@ -74,6 +75,7 @@
 		0AA4D9B7248064A300CF95A5 /* ReorderingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReorderingViewController.swift; sourceTree = "<group>"; };
 		0AA4D9B8248064A300CF95A5 /* CollectionViewBasicDemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewBasicDemoViewController.swift; sourceTree = "<group>"; };
 		0AC2A1952489F93E00779459 /* PagedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagedViewController.swift; sourceTree = "<group>"; };
+		0AC8398D25EDF3AC0055CEF5 /* LongListPerformanceTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LongListPerformanceTestViewController.swift; sourceTree = "<group>"; };
 		0ACF96D524A0094D0090EAC4 /* ItemInsertAndRemoveAnimationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemInsertAndRemoveAnimationsViewController.swift; sourceTree = "<group>"; };
 		0AD6767925423BE500A49315 /* MultiSelectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSelectViewController.swift; sourceTree = "<group>"; };
 		0ADC3B3424907C80008DF2C0 /* XcodePreviewDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodePreviewDemo.swift; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 			children = (
 				0A49210324E5E11300D17038 /* AccordionViewController.swift */,
 				0A66420A254A317A007F6B2F /* AutoLayoutDemoViewController.swift */,
+				0AC8398D25EDF3AC0055CEF5 /* LongListPerformanceTestViewController.swift */,
 				0AA4D9B4248064A300CF95A5 /* AutoScrollingViewController.swift */,
 				0AA4D9AC248064A300CF95A5 /* BlueprintListDemoViewController.swift */,
 				0AA4D9B2248064A300CF95A5 /* CollectionViewAppearance.swift */,
@@ -453,6 +456,7 @@
 				0AA4D9BD248064A300CF95A5 /* BlueprintListDemoViewController.swift in Sources */,
 				0AA4D9BB248064A300CF95A5 /* ScrollViewEdgesPlaygroundViewController.swift in Sources */,
 				0ACF96D624A0094D0090EAC4 /* ItemInsertAndRemoveAnimationsViewController.swift in Sources */,
+				0AC8398E25EDF3AC0055CEF5 /* LongListPerformanceTestViewController.swift in Sources */,
 				0AA4D9C7248064A300CF95A5 /* CollectionViewDictionaryDemoViewController.swift in Sources */,
 				0ADC3B3524907C80008DF2C0 /* XcodePreviewDemo.swift in Sources */,
 				0AD6767A25423BE500A49315 /* MultiSelectViewController.swift in Sources */,

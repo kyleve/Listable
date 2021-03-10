@@ -85,7 +85,7 @@ class ListLayoutContentTests : XCTestCase
 }
 
 
-class ListLayoutContent_SectionInfo_Tests : XCTestCase
+class ListLayoutContent_SectionInfoTests : XCTestCase
 {
     func test_all()
     {
@@ -195,18 +195,19 @@ class ListLayoutContent_SectionInfo_Tests : XCTestCase
 }
 
 
-class ListLayoutContent_SupplementaryItemInfo_Tests : XCTestCase
+class ListLayoutContent_SupplementaryItemInfoTests : XCTestCase
 {
     
 }
 
 
-class ListLayoutContent_ItemInfo_Tests : XCTestCase
+class ListLayoutContent_ItemInfoTests : XCTestCase
 {
     
 }
 
-class ListLayoutContent_CGRect_Tests : XCTestCase
+
+class ListLayoutContent_CGRectTests : XCTestCase
 {
     func test_unioned()
     {
