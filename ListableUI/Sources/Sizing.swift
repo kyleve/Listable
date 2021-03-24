@@ -75,7 +75,7 @@ public enum Sizing : Hashable
                 return CGSize(width: width, height: height)
                 
             case .thatFits(let constraint):
-                let size = view.sizeThatFits(info.sizeConstraint)
+                let size = view.sizeThatFits(info.fittingSize)
                 
                 return constraint.clamp(size, with: info.defaultSize)
                 
@@ -85,13 +85,13 @@ public enum Sizing : Hashable
                     switch info.direction {
                     case .vertical:
                         return view.systemLayoutSizeFitting(
-                            CGSize(width: info.sizeConstraint.width, height:0),
+                            info.fittingSize,
                             withHorizontalFittingPriority: .required,
                             verticalFittingPriority: .fittingSizeLevel
                         )
                     case .horizontal:
                         return view.systemLayoutSizeFitting(
-                            CGSize(width: 0, height:info.sizeConstraint.height),
+                            info.fittingSize,
                             withHorizontalFittingPriority: .fittingSizeLevel,
                             verticalFittingPriority: .required
                         )
@@ -133,16 +133,16 @@ extension Sizing
 {
     public struct MeasureInfo
     {
-        var sizeConstraint : CGSize
+        var fittingSize : CGSize
         var defaultSize : CGSize
         var direction : LayoutDirection
         
         init(
-            sizeConstraint: CGSize,
+            fittingSize: CGSize,
             defaultSize: CGSize,
             direction: LayoutDirection
         ) {
-            self.sizeConstraint = sizeConstraint
+            self.fittingSize = fittingSize
             self.defaultSize = defaultSize
             self.direction = direction
         }

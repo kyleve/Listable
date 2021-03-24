@@ -173,13 +173,13 @@ extension PresentationState
             environment : ListEnvironment
         ) -> CGSize
         {
-            guard info.sizeConstraint.isEmpty == false else {
+            guard info.fittingSize.isEmpty == false else {
                 return .zero
             }
             
             let key = SizeKey(
-                width: info.sizeConstraint.width,
-                height: info.sizeConstraint.height,
+                width: info.fittingSize.width,
+                height: info.fittingSize.height,
                 layoutDirection: info.direction,
                 sizing: self.model.sizing
             )

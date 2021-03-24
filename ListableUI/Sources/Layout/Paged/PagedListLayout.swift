@@ -66,32 +66,40 @@ public struct PagedAppearance : ListLayoutAppearance
     /// How far each item in the list should be inset from the edges of the view.
     public var itemInsets : UIEdgeInsets
     
-    /// Internal property for test harness only.
-    internal var pagingSize : PagingSize
+    /// Specify the size of each item in the list.
+    public var itemSize : ItemSize
     
     public init(
         direction: LayoutDirection = .vertical,
         showsScrollIndicators : Bool = false,
-        itemInsets : UIEdgeInsets = .zero
+        itemInsets : UIEdgeInsets = .zero,
+        itemSize : ItemSize = .view
     ) {
-        self.pagingSize = .view
-        
         self.direction = direction
         self.showsScrollIndicators = showsScrollIndicators
         self.itemInsets = itemInsets
+        self.itemSize = itemSize
     }
     
-    enum PagingSize : Equatable {
+    public enum ItemSize : Equatable {
         case view
         case fixed(CGFloat)
+        case percent(CGFloat)
         
         func size(for view : UIView, direction : LayoutDirection) -> CGSize {
             switch self {
             case .view: return view.bounds.size
+                
             case .fixed(let fixed):
                 switch direction {
                 case .vertical: return CGSize(width: view.bounds.width, height: fixed)
                 case .horizontal: return CGSize(width: fixed, height: view.bounds.height)
+                }
+                
+            case .percent(let percent):
+                switch direction {
+                case .vertical: return CGSize(width: view.bounds.width, height: round(view.bounds.height * percent))
+                case .horizontal: return CGSize(width: round(view.bounds.width * percent), height: view.bounds.height)
                 }
             }
         }
@@ -115,7 +123,7 @@ final class PagedListLayout : ListLayout
             
     var scrollViewProperties: ListLayoutScrollViewProperties {
         .init(
-            isPagingEnabled: self.layoutAppearance.pagingSize == .view,
+            isPagingEnabled: true,
             contentInsetAdjustmentBehavior: .never,
             allowsBounceVertical: false,
             allowsBounceHorizontal: false,
@@ -154,7 +162,7 @@ final class PagedListLayout : ListLayout
         delegate : CollectionViewLayoutDelegate,
         in collectionView : UICollectionView  
     ) {
-        let viewSize = self.layoutAppearance.pagingSize.size(for: collectionView, direction: self.direction)
+        let viewSize = self.layoutAppearance.itemSize.size(for: collectionView, direction: self.direction)
         
         var lastMaxY : CGFloat = 0.0
         

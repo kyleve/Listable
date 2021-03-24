@@ -235,7 +235,7 @@ protocol ListLayoutContentItem : AnyObject
 
 public extension ListLayoutContent
 {
-    final class SectionInfo
+    final class SectionInfo : LayoutDirectionVarying
     {
         let layouts : SectionLayouts
         
@@ -296,14 +296,15 @@ public extension ListLayoutContent
         }
     }
 
-    final class SupplementaryItemInfo : ListLayoutContentItem
+    final class SupplementaryItemInfo : ListLayoutContentItem, LayoutDirectionVarying
     {
         static func empty(_ kind : SupplementaryKind) -> SupplementaryItemInfo
         {
             SupplementaryItemInfo(
                 kind: kind,
                 layouts: .init(),
-                isPopulated: false, measurer: { _ in .zero }
+                isPopulated: false,
+                measurer: { _ in .zero }
             )
         }
         
@@ -365,7 +366,7 @@ public extension ListLayoutContent
     }
     
 
-    final class ItemInfo : ListLayoutContentItem
+    final class ItemInfo : ListLayoutContentItem, LayoutDirectionVarying
     {
         var delegateProvidedIndexPath : IndexPath
         var liveIndexPath : IndexPath
