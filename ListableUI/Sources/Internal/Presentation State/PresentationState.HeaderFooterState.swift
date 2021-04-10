@@ -61,7 +61,9 @@ extension PresentationState
             
             self.state = state
             
-            self.applyToVisibleView(with: environment)
+            if let model = self.state?.anyModel, model.alwaysReappliesToVisibleView {
+                self.applyToVisibleView(with: environment)
+            }
         }
                 
         func willDisplay(view : SupplementaryContainerView)
