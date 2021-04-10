@@ -43,10 +43,6 @@ extension PresentationState
     {
         var state : AnyPresentationHeaderFooterState? {
             didSet {
-                guard oldValue !== self.state else {
-                    return
-                }
-                
                 guard let container = self.visibleContainer else {
                     return
                 }
@@ -57,6 +53,17 @@ extension PresentationState
         
         private(set) var visibleContainer : SupplementaryContainerView?
         
+        func update(with state : AnyPresentationHeaderFooterState?, environment : ListEnvironment) {
+            
+            guard self.state !== state else {
+                return
+            }
+            
+            self.state = state
+            
+            self.applyToVisibleView(with: environment)
+        }
+                
         func willDisplay(view : SupplementaryContainerView)
         {
             self.visibleContainer = view

@@ -54,6 +54,8 @@ public protocol HeaderFooterContent
         with info : ApplyHeaderFooterContentInfo
     )
     
+    var alwaysReappliesToVisibleView : Bool { get }
+    
     //
     // MARK: Tracking Changes
     //
@@ -147,6 +149,14 @@ public struct HeaderFooterContentViews<Content:HeaderFooterContent>
     
     /// The background view of the content that's displayed while a press is active.
     public var pressed : Content.PressedBackgroundView
+}
+
+
+public extension HeaderFooterContent {
+    
+    var alwaysReappliesToVisibleView : Bool {
+        true
+    }
 }
 
 

@@ -66,14 +66,20 @@ extension ListView
         {
             // Perform Updates Of Visible Headers & Footers
             
+            /// TODO: Need to check if `isEquivalent` changed and re-apply regardless?? Or wait, maybe this is done already automatically in the presentation state...
+            
             self.headerFooters.forEach {
-                $0.headerFooter.applyToVisibleView(with: environment)
+                if let state = $0.headerFooter.state, state.anyModel.alwaysReappliesToVisibleView {
+                    $0.headerFooter.applyToVisibleView(with: environment)
+                }
             }
             
             // Perform Updates Of Visible Items
             
             self.items.forEach {
-                $0.item.applyToVisibleCell(with: environment)
+                if $0.item.anyModel.alwaysReappliesToVisibleView {
+                    $0.item.applyToVisibleCell(with: environment)
+                }
             }
         }
         

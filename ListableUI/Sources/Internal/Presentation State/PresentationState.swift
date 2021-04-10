@@ -270,22 +270,33 @@ final class PresentationState
         
         self.contentIdentifier = slice.content.identifier
         
-        self.header.state = SectionState.headerFooterState(
-            with: self.header.state,
-            new: slice.content.header,
-            performsContentCallbacks: self.performsContentCallbacks
+        let environment = dependencies.environmentProvider()
+        
+        self.header.update(
+            with: SectionState.headerFooterState(
+                with: self.header.state,
+                new: slice.content.header,
+                performsContentCallbacks: self.performsContentCallbacks
+            ),
+            environment: environment
         )
         
-        self.footer.state = SectionState.headerFooterState(
-            with: self.footer.state,
-            new: slice.content.footer,
-            performsContentCallbacks: self.performsContentCallbacks
+        self.footer.update(
+            with: SectionState.headerFooterState(
+                with: self.footer.state,
+                new: slice.content.footer,
+                performsContentCallbacks: self.performsContentCallbacks
+            ),
+            environment: environment
         )
         
-        self.overscrollFooter.state = SectionState.headerFooterState(
-            with: self.overscrollFooter.state,
-            new: slice.content.overscrollFooter,
-            performsContentCallbacks: self.performsContentCallbacks
+        self.overscrollFooter.update(
+            with: SectionState.headerFooterState(
+                with: self.overscrollFooter.state,
+                new: slice.content.overscrollFooter,
+                performsContentCallbacks: self.performsContentCallbacks
+            ),
+            environment: environment
         )
         
         self.sections = diff.changes.transform(

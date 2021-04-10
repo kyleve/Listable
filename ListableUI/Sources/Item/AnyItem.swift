@@ -23,6 +23,8 @@ public protocol AnyItem : AnyItem_Internal
     var swipeActions : SwipeActionsConfiguration? { get set }
     
     var reordering : Reordering? { get set }
+    
+    var alwaysReappliesToVisibleView : Bool { get }
 }
 
 

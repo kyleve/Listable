@@ -77,6 +77,8 @@ public protocol ItemContent where Coordinator.ItemContentType == Self
         with info : ApplyItemContentInfo
     )
     
+    var alwaysReappliesToVisibleView : Bool { get }
+    
     //
     // MARK: Tracking Changes
     //
@@ -268,6 +270,10 @@ public extension ItemContent
 /// empty instance that does not provide any defaults.
 public extension ItemContent
 {
+    var alwaysReappliesToVisibleView : Bool {
+        false
+    }
+    
     var defaultItemProperties : DefaultItemProperties<Self> {
         .init()
     }

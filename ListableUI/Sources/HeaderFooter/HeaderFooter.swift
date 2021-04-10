@@ -57,6 +57,12 @@ public struct HeaderFooter<Content:HeaderFooterContent> : AnyHeaderFooter
         self.reuseIdentifier = ReuseIdentifier.identifier(for: Content.self)
     }
     
+    // MARK: AnyHeaderFooter
+    
+    public var alwaysReappliesToVisibleView : Bool {
+        self.content.alwaysReappliesToVisibleView
+    }
+    
     // MARK: AnyHeaderFooter_Internal
     
     public func apply(

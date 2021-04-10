@@ -36,7 +36,7 @@ protocol AnyPresentationItemState : AnyObject
     
     func applyToVisibleCell(with environment : ListEnvironment)
         
-    func setNew(item anyItem : AnyItem, reason : PresentationState.ItemUpdateReason, updateCallbacks : UpdateCallbacks)
+    func setNew(item anyItem : AnyItem, reason : PresentationState.ItemUpdateReason, updateCallbacks : UpdateCallbacks, environment : ListEnvironment)
     
     func willDisplay(cell : UICollectionViewCell, in collectionView : UICollectionView, for indexPath : IndexPath)
     func didEndDisplay()
@@ -160,10 +160,16 @@ extension PresentationState
                     return
                 }
                 
-                self.setNew(item: new, reason: .updateFromItemCoordinator, updateCallbacks: UpdateCallbacks(.immediate))
+                let environment = dependencies.environmentProvider()
+                
+                self.setNew(
+                    item: new,
+                    reason: .updateFromItemCoordinator,
+                    updateCallbacks: UpdateCallbacks(.immediate),
+                    environment: environment
+                )
                 
                 animation.perform {
-                    self.applyToVisibleCell(with: dependencies.environmentProvider())
                     delegate.coordinatorUpdated(for: self.anyModel)
                 }
             }
@@ -292,7 +298,7 @@ extension PresentationState
             )
         }
         
-        func setNew(item anyItem: AnyItem, reason: ItemUpdateReason, updateCallbacks : UpdateCallbacks)
+        func setNew(item anyItem: AnyItem, reason: ItemUpdateReason, updateCallbacks : UpdateCallbacks, environment : ListEnvironment)
         {
             let old = self.model
             let new = anyItem as! Item<Content>
@@ -327,6 +333,12 @@ extension PresentationState
 
             if reason != .noChange {
                 self.resetCachedSizes()
+            }
+            
+            let shouldApplyToVisibleView = self.model.alwaysReappliesToVisibleView || reason != .noChange
+            
+            if shouldApplyToVisibleView {
+                self.applyToVisibleCell(with: environment)
             }
         }
         

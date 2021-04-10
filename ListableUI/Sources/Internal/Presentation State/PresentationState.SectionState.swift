@@ -28,7 +28,7 @@ extension PresentationState
             performsContentCallbacks : Bool
         ) {
             self.model = model
-            
+                        
             self.header.state = SectionState.headerFooterState(
                 with: self.header.state,
                 new: model.header,
@@ -73,16 +73,24 @@ extension PresentationState
         ) {
             self.model = newSection
             
-            self.header.state = SectionState.headerFooterState(
-                with: self.header.state,
-                new: self.model.header,
-                performsContentCallbacks: self.performsContentCallbacks
+            let environment = dependencies.environmentProvider()
+            
+            self.header.update(
+                with: SectionState.headerFooterState(
+                    with: self.header.state,
+                    new: self.model.header,
+                    performsContentCallbacks: self.performsContentCallbacks
+                ),
+                environment: environment
             )
             
-            self.footer.state = SectionState.headerFooterState(
-                with: self.footer.state,
-                new: self.model.footer,
-                performsContentCallbacks: self.performsContentCallbacks
+            self.footer.update(
+                with: SectionState.headerFooterState(
+                    with: self.footer.state,
+                    new: self.model.footer,
+                    performsContentCallbacks: self.performsContentCallbacks
+                ),
+                environment: environment
             )
             
             self.items = changes.transform(
@@ -98,13 +106,13 @@ extension PresentationState
                     ) as! AnyPresentationItemState
                 },
                 moved: { old, new, item in
-                    item.setNew(item: new, reason: .moveFromList, updateCallbacks: updateCallbacks)
+                    item.setNew(item: new, reason: .moveFromList, updateCallbacks: updateCallbacks, environment: environment)
                 },
                 updated: { old, new, item in
-                    item.setNew(item: new, reason: .updateFromList, updateCallbacks: updateCallbacks)
+                    item.setNew(item: new, reason: .updateFromList, updateCallbacks: updateCallbacks, environment: environment)
                 },
                 noChange: { old, new, item in
-                    item.setNew(item: new, reason: .noChange, updateCallbacks: updateCallbacks)
+                    item.setNew(item: new, reason: .noChange, updateCallbacks: updateCallbacks, environment: environment)
                 }
             )
         }
