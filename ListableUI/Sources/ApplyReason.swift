@@ -16,6 +16,9 @@ public enum ApplyReason : Hashable
     /// If your updates can contain animated transitions, you should animate this update.
     case wasUpdated
     
+    /// The item is being measured to perform the layout of the list. Update should be performed with no animation.
+    case measurement
+    
     /// If you should use animations while applying the update.
     /// Check this boolean in your `apply` method to avoid
     /// having to `switch` over the value of `ApplyReason`.
@@ -23,6 +26,7 @@ public enum ApplyReason : Hashable
         switch self {
         case .willDisplay: return false
         case .wasUpdated: return true
+        case .measurement: return false
         }
     }
 }

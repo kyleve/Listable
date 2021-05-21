@@ -14,8 +14,8 @@ extension PresentationState
     {
         var model : Section
         
-        var header : HeaderFooterViewStatePair = .init()
-        var footer : HeaderFooterViewStatePair = .init()
+        var header : HeaderFooterViewStatePair
+        var footer : HeaderFooterViewStatePair
         
         var items : [AnyPresentationItemState]
         
@@ -29,17 +29,15 @@ extension PresentationState
         ) {
             self.model = model
                         
-            self.header.state = SectionState.headerFooterState(
-                with: self.header.state,
-                new: model.header,
+            self.header = .init(state: SectionState.newHeaderFooterState(
+                with: model.header,
                 performsContentCallbacks: performsContentCallbacks
-            )
+            ))
             
-            self.footer.state = SectionState.headerFooterState(
-                with: self.footer.state,
-                new: model.footer,
+            self.footer = .init(state: SectionState.newHeaderFooterState(
+                with: model.footer,
                 performsContentCallbacks: performsContentCallbacks
-            )
+            ))
             
             self.performsContentCallbacks = performsContentCallbacks
             
@@ -68,6 +66,7 @@ extension PresentationState
             with oldSection : Section,
             new newSection : Section,
             changes : SectionedDiff<Section, AnyIdentifier, AnyItem, AnyIdentifier>.ItemChanges,
+            reason: ApplyReason,
             dependencies : ItemStateDependencies,
             updateCallbacks : UpdateCallbacks
         ) {
@@ -77,19 +76,21 @@ extension PresentationState
             
             self.header.update(
                 with: SectionState.headerFooterState(
-                    with: self.header.state,
+                    current: self.header.state,
                     new: self.model.header,
                     performsContentCallbacks: self.performsContentCallbacks
                 ),
+                reason: reason,
                 environment: environment
             )
             
             self.footer.update(
                 with: SectionState.headerFooterState(
-                    with: self.footer.state,
+                    current: self.footer.state,
                     new: self.model.footer,
                     performsContentCallbacks: self.performsContentCallbacks
                 ),
+                reason: reason,
                 environment: environment
             )
             
@@ -124,8 +125,20 @@ extension PresentationState
             }
         }
         
+        static func newHeaderFooterState(
+            with new : AnyHeaderFooter?,
+            performsContentCallbacks : Bool
+        ) -> AnyPresentationHeaderFooterState?
+        {
+            if let new = new {
+                return (new.newPresentationHeaderFooterState(performsContentCallbacks: performsContentCallbacks) as! AnyPresentationHeaderFooterState)
+            } else {
+                return nil
+            }
+        }
+        
         static func headerFooterState(
-            with current : AnyPresentationHeaderFooterState?,
+            current : AnyPresentationHeaderFooterState?,
             new : AnyHeaderFooter?,
             performsContentCallbacks : Bool
         ) -> AnyPresentationHeaderFooterState?
@@ -135,7 +148,7 @@ extension PresentationState
                     let isSameType = type(of: current.anyModel) == type(of: new)
                     
                     if isSameType {
-                        current.setNew(headerFooter: new)
+                        // TODO: Update the thing here? I guess...
                         return current
                     } else {
                         return (new.newPresentationHeaderFooterState(performsContentCallbacks: performsContentCallbacks) as! AnyPresentationHeaderFooterState)

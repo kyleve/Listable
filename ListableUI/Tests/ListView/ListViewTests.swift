@@ -207,6 +207,107 @@ class ListViewTests: XCTestCase
         
         view.collectionView.layoutIfNeeded()
     }
+    
+    func test_alwaysReappliesToVisibleView() {
+        
+        self.testcase("true") {
+            
+        }
+        
+        self.testcase("false") {
+            let view = ListView()
+            view.frame.size = CGSize(width: 200, height: 400)
+            
+            var reappliedIDs = [AnyHashable]()
+            
+            view.configure { list in
+                list("section") { section in
+                    section.header = HeaderFooter(
+                        ReapplySupplementary(title: "title", alwaysReappliesToVisibleView: false) {
+                            reappliedIDs.append("header")
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                    
+                    section.footer = HeaderFooter(
+                        ReapplySupplementary(title: "footer", alwaysReappliesToVisibleView: false) {
+                            reappliedIDs.append("footer")
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                    
+                    section += Item(
+                        ReapplyContent(title: "row", id: 1, alwaysReappliesToVisibleView: false) {
+                            reappliedIDs.append(1)
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                    
+                    section += Item(
+                        ReapplyContent(title: "row", id: 2, alwaysReappliesToVisibleView: false)  {
+                            reappliedIDs.append(2)
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                }
+            }
+            
+            /// Force the cells in the collection view to be updated.
+            view.collectionView.layoutIfNeeded()
+            
+            XCTAssertEqual(reappliedIDs, [
+                1,
+                2,
+                "header",
+                "footer",
+            ])
+            
+            view.configure { list in
+                list("section") { section in
+                    section.header = HeaderFooter(
+                        ReapplySupplementary(title: "title", alwaysReappliesToVisibleView: false) {
+                            reappliedIDs.append("header")
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                    
+                    section.footer = HeaderFooter(
+                        ReapplySupplementary(title: "changed footer", alwaysReappliesToVisibleView: false) {
+                            reappliedIDs.append("footer")
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                    
+                    section += Item(
+                        ReapplyContent(title: "row", id: 1, alwaysReappliesToVisibleView: false) {
+                            reappliedIDs.append(1)
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                    
+                    section += Item(
+                        ReapplyContent(title: "changed row", id: 2, alwaysReappliesToVisibleView: false)  {
+                            reappliedIDs.append(2)
+                        },
+                        sizing: .fixed(height: 50)
+                    )
+                }
+            }
+            
+            /// Force the cells in the collection view to be updated.
+            view.collectionView.layoutIfNeeded()
+            
+            XCTAssertEqual(reappliedIDs, [
+                1,
+                2,
+                "header",
+                "footer",
+                
+                2,
+                "footer"
+            ])
+        }
+    }
 }
 
 
@@ -251,4 +352,71 @@ fileprivate struct TestSupplementary : HeaderFooterContent, Equatable
     {
         return UIView(frame: frame)
     }
+}
+
+
+fileprivate struct ReapplyContent : ItemContent
+{
+    var title : String
+    var id : AnyHashable
+    
+    func isEquivalent(to other: ReapplyContent) -> Bool {
+        self.title == other.title
+    }
+    
+    var identifier: Identifier<ReapplyContent> {
+        return .init(self.id)
+    }
+    
+    func apply(
+        to views: ItemContentViews<Self>,
+        for reason: ApplyReason,
+        with info: ApplyItemContentInfo
+    ) {
+        if reason != .measurement {
+            self.onApply()
+        }
+    }
+    
+    typealias ContentView = UIView
+    
+    static func createReusableContentView(frame: CGRect) -> UIView
+    {
+        return UIView(frame: frame)
+    }
+    
+    var alwaysReappliesToVisibleView: Bool
+    
+    var onApply : () -> ()
+}
+
+
+fileprivate struct ReapplySupplementary : HeaderFooterContent
+{
+    var title : String
+    
+    func isEquivalent(to other: ReapplySupplementary) -> Bool {
+        self.title == other.title
+    }
+    
+    func apply(
+        to views: HeaderFooterContentViews<Self>,
+        for reason: ApplyReason,
+        with info: ApplyHeaderFooterContentInfo
+    ) {
+        if reason != .measurement {
+            self.onApply()
+        }
+    }
+    
+    typealias ContentView = UIView
+
+    static func createReusableContentView(frame: CGRect) -> UIView
+    {
+        return UIView(frame: frame)
+    }
+    
+    var alwaysReappliesToVisibleView: Bool
+    
+    var onApply : () -> ()
 }

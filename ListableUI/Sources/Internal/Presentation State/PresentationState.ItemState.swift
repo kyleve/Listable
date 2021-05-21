@@ -36,7 +36,12 @@ protocol AnyPresentationItemState : AnyObject
     
     func applyToVisibleCell(with environment : ListEnvironment)
         
-    func setNew(item anyItem : AnyItem, reason : PresentationState.ItemUpdateReason, updateCallbacks : UpdateCallbacks, environment : ListEnvironment)
+    func setNew(
+        item anyItem : AnyItem,
+        reason : PresentationState.ItemUpdateReason,
+        updateCallbacks : UpdateCallbacks,
+        environment : ListEnvironment
+    )
     
     func willDisplay(cell : UICollectionViewCell, in collectionView : UICollectionView, for indexPath : IndexPath)
     func didEndDisplay()
@@ -458,7 +463,7 @@ extension PresentationState
                     self.applyTo(
                         cell: cell,
                         itemState: itemState,
-                        reason: .willDisplay,
+                        reason: .measurement,
                         environment: environment
                     )
                     

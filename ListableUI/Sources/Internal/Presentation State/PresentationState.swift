@@ -16,9 +16,9 @@ final class PresentationState
         
     var refreshControl : RefreshControlState?
     
-    var header : HeaderFooterViewStatePair = .init()
-    var footer : HeaderFooterViewStatePair = .init()
-    var overscrollFooter : HeaderFooterViewStatePair = .init()
+    var header : HeaderFooterViewStatePair = .init(state: nil)
+    var footer : HeaderFooterViewStatePair = .init(state: nil)
+    var overscrollFooter : HeaderFooterViewStatePair = .init(state: nil)
     
     var sections : [PresentationState.SectionState]
     
@@ -65,23 +65,20 @@ final class PresentationState
             }
         }()
         
-        self.header.state = SectionState.headerFooterState(
-            with: nil,
-            new: content.header,
-            performsContentCallbacks: false
-        )
+        self.header = .init(state: SectionState.newHeaderFooterState(
+            with: content.header,
+            performsContentCallbacks: false // TODO: Why are these false??
+        ))
         
-        self.footer.state = SectionState.headerFooterState(
-            with: nil,
-            new: content.footer,
+        self.footer = .init(state: SectionState.newHeaderFooterState(
+            with: content.footer,
             performsContentCallbacks: false
-        )
+        ))
         
-        self.overscrollFooter.state = SectionState.headerFooterState(
-            with: nil,
-            new: content.overscrollFooter,
+        self.overscrollFooter = .init(state: SectionState.newHeaderFooterState(
+            with: content.overscrollFooter,
             performsContentCallbacks: false
-        )
+        ))
         
         self.sections = content.sections.map { section in
             SectionState(
@@ -256,6 +253,7 @@ final class PresentationState
     func update(
         with diff : SectionedDiff<Section, AnyIdentifier, AnyItem, AnyIdentifier>,
         slice : Content.Slice,
+        reason: ApplyReason,
         dependencies: ItemStateDependencies,
         updateCallbacks : UpdateCallbacks,
         loggable : SignpostLoggable?
@@ -274,28 +272,31 @@ final class PresentationState
         
         self.header.update(
             with: SectionState.headerFooterState(
-                with: self.header.state,
+                current: self.header.state,
                 new: slice.content.header,
                 performsContentCallbacks: self.performsContentCallbacks
             ),
+            reason: reason,
             environment: environment
         )
         
         self.footer.update(
             with: SectionState.headerFooterState(
-                with: self.footer.state,
+                current: self.footer.state,
                 new: slice.content.footer,
                 performsContentCallbacks: self.performsContentCallbacks
             ),
+            reason: reason,
             environment: environment
         )
         
         self.overscrollFooter.update(
             with: SectionState.headerFooterState(
-                with: self.overscrollFooter.state,
+                current: self.overscrollFooter.state,
                 new: slice.content.overscrollFooter,
                 performsContentCallbacks: self.performsContentCallbacks
             ),
+            reason: reason,
             environment: environment
         )
         
@@ -316,6 +317,7 @@ final class PresentationState
                 section.update(
                     with: old, new:new,
                     changes: changes,
+                    reason: reason,
                     dependencies: dependencies,
                     updateCallbacks: updateCallbacks
                 )
@@ -324,6 +326,7 @@ final class PresentationState
                 section.update(
                     with: old, new: new,
                     changes: changes,
+                    reason: reason,
                     dependencies: dependencies,
                     updateCallbacks: updateCallbacks
                 )

@@ -935,6 +935,7 @@ public final class ListView : UIView, KeyboardObserverDelegate
             presentationState.update(
                 with: diff,
                 slice: visibleSlice,
+                reason: .wasUpdated,
                 dependencies: dependencies,
                 updateCallbacks: updateCallbacks,
                 loggable: self
@@ -1155,8 +1156,6 @@ public final class ListView : UIView, KeyboardObserverDelegate
             changes.movedItems.forEach {
                 view.moveItem(at: $0.oldIndex, to: $0.newIndex)
             }
-            
-            self.visibleContent.updateVisibleViews(with: self.environment)
         }
         
         if changes.hasIndexAffectingChanges {

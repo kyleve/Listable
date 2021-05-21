@@ -62,27 +62,6 @@ extension ListView
             )
         }
         
-        func updateVisibleViews(with environment : ListEnvironment)
-        {
-            // Perform Updates Of Visible Headers & Footers
-            
-            /// TODO: Need to check if `isEquivalent` changed and re-apply regardless?? Or wait, maybe this is done already automatically in the presentation state...
-            
-            self.headerFooters.forEach {
-                if let state = $0.headerFooter.state, state.anyModel.alwaysReappliesToVisibleView {
-                    $0.headerFooter.applyToVisibleView(with: environment)
-                }
-            }
-            
-            // Perform Updates Of Visible Items
-            
-            self.items.forEach {
-                if $0.item.anyModel.alwaysReappliesToVisibleView {
-                    $0.item.applyToVisibleCell(with: environment)
-                }
-            }
-        }
-        
         private func calculateVisibleContent(in view : ListView) -> (Set<Item>, Set<HeaderFooter>)
         {
             let visibleFrame = view.collectionView.bounds

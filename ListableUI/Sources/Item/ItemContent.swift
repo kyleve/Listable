@@ -77,6 +77,9 @@ public protocol ItemContent where Coordinator.ItemContentType == Self
         with info : ApplyItemContentInfo
     )
     
+    /**
+        
+     */
     var alwaysReappliesToVisibleView : Bool { get }
     
     //
@@ -271,7 +274,7 @@ public extension ItemContent
 public extension ItemContent
 {
     var alwaysReappliesToVisibleView : Bool {
-        false
+        true
     }
     
     var defaultItemProperties : DefaultItemProperties<Self> {
