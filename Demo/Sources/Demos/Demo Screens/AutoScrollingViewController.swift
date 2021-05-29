@@ -106,7 +106,10 @@ struct BottomPinnedItem : BlueprintItemContent, Equatable
         return .init(self.text)
     }
 
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         var box = Box(
             backgroundColor: .white,

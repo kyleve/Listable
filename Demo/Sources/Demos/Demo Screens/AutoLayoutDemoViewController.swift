@@ -47,7 +47,8 @@ struct AutoLayoutContent : ItemContent, Equatable {
     func apply(
         to views: ItemContentViews<Self>,
         for reason: ApplyReason,
-        with info: ApplyItemContentInfo
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
     ) {
         views.content.headerLabel.text = self.header
         views.content.detailLabel.text = self.detail

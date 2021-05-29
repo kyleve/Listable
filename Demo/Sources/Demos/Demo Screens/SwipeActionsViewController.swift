@@ -126,7 +126,11 @@ final class SwipeActionsViewController: UIViewController  {
             return .init(item.identifier)
         }
 
-        func element(with info : ApplyItemContentInfo) -> Element {
+        func element(
+            with info: ApplyItemContentInfo,
+            send : @escaping Coordinator.SendAction
+        ) -> Element
+        {
             return Column { column in
 
                 column.horizontalAlignment = .fill

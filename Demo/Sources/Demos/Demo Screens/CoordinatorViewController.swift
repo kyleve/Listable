@@ -42,7 +42,10 @@ fileprivate struct PodcastElement : BlueprintItemContent, Equatable
         .init(podcast.name)
     }
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         Column { col in
             col.horizontalAlignment = .fill

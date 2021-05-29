@@ -57,6 +57,12 @@ public protocol ItemContentCoordinator : AnyObject
     /// The type of `ItemContent` associated with this coordinator.
     associatedtype ItemContentType : ItemContent
     
+    /// A type, usually an enum, associated with the coordinator that can be used to
+    /// send various kinds of actions / work from the `ItemContent`.
+    associatedtype Action = Void
+    
+    typealias SendAction = (Self.Action) -> ()
+    
     /// The item associated with the coordinator.
     typealias Item = ListableUI.Item<ItemContentType>
     
@@ -67,6 +73,10 @@ public protocol ItemContentCoordinator : AnyObject
     
     /// Info about the coordinated `Item`, such as its original and current value.
     var info : ItemContentType.CoordinatorInfo { get }
+    
+    // MARK: Handling Actions
+    
+    func handle(action : Action)
     
     // MARK: Instance Lifecycle
     
@@ -131,6 +141,14 @@ public extension ItemContentCoordinator
     func wasSelected() {}
     
     func wasDeselected() {}
+}
+
+
+public extension ItemContentCoordinator where Action == Void
+{
+    // MARK: Handling Actions
+    
+    func handle(action : Action) { }
 }
 
 

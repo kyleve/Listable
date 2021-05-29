@@ -45,7 +45,11 @@ fileprivate struct SelectableRow : BlueprintItemContent, Equatable {
         .init(self.text)
     }
     
-    func element(with info: ApplyItemContentInfo) -> Element {
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
+    {
         Label(text: self.text) {
             $0.font = .systemFont(ofSize: 18.0, weight: .semibold)
         }

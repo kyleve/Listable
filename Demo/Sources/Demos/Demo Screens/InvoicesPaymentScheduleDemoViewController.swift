@@ -276,7 +276,10 @@ fileprivate struct ToggleRow : BlueprintItemContent
     
     // MARK: BlueprintItemElement
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         return Inset(top: 10.0, bottom: 10.0, left: 0.0, right: 0.0, wrapping: Row { row in
             
@@ -334,7 +337,10 @@ fileprivate struct SegmentedControlRow : BlueprintItemContent
     
     // MARK: BlueprintItemElement
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         return self.control
     }
@@ -368,7 +374,10 @@ fileprivate struct AmountRow : BlueprintItemContent
     
     // MARK: BlueprintItemElement
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         var box = Box(wrapping: Row { row in
             
@@ -420,7 +429,10 @@ fileprivate struct ButtonRow : BlueprintItemContent
     var text : String
     var onTap : () -> ()
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         fatalError()
     }

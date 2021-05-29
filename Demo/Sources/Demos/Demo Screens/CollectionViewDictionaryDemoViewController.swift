@@ -151,8 +151,12 @@ fileprivate struct SearchBarElement : ItemContent
         return .init("search")
     }
     
-    func apply(to views : ItemContentViews<Self>, for reason: ApplyReason, with info: ApplyItemContentInfo)
-    {
+    func apply(
+        to views : ItemContentViews<Self>,
+        for reason: ApplyReason,
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) {
         views.content.onStateChanged = self.onChange
         views.content.text = self.text
     }
@@ -205,7 +209,10 @@ fileprivate struct WordRow : BlueprintItemContent, Equatable
     
     // MARK: BlueprintItemElement
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         return Box(
             backgroundColor: .init(white: 0.96, alpha: 1.0),

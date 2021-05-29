@@ -97,8 +97,12 @@ public struct EmbeddedList : ItemContent
         return .init(self.contentIdentifier)
     }
     
-    public func apply(to views : ItemContentViews<Self>, for reason: ApplyReason, with info : ApplyItemContentInfo)
-    {
+    public func apply(
+        to views : ItemContentViews<Self>,
+        for reason: ApplyReason,
+        with info : ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) {
         views.content.configure(with: self.properties)
     }
     

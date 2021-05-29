@@ -48,7 +48,11 @@ fileprivate struct DemoElement : BlueprintItemContent, Equatable
     
     var color : UIColor
     
-    func element(with info: ApplyItemContentInfo) -> Element {
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
+    {
         Box(backgroundColor: self.color)
     }
 }

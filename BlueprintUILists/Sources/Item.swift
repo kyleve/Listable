@@ -150,7 +150,10 @@ public struct BlueprintItemContentWrapper<Represented, IDType:Hashable> : Bluepr
         self.isEquivalentProvider(self.representing, other.representing)
     }
     
-    public func element(with info: ApplyItemContentInfo) -> Element {
+    public func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element {
         self.elementProvider(self.representing, info)
     }
     

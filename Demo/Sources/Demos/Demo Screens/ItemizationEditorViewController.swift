@@ -209,7 +209,10 @@ struct ChoiceItem : BlueprintItemContent, Equatable
     
     // MARK: BlueprintItemElement
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         var box = Box(
             cornerStyle: .rounded(radius: 8.0),
@@ -267,7 +270,10 @@ struct ToggleItem : BlueprintItemContent
         return .init(self.content.title)
     }
     
-    func element(with info: ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         var box = Box(
             cornerStyle: .rounded(radius: 8.0),

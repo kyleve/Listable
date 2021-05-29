@@ -74,7 +74,8 @@ public protocol ItemContent where Coordinator.ItemContentType == Self
     func apply(
         to views : ItemContentViews<Self>,
         for reason: ApplyReason,
-        with info : ApplyItemContentInfo
+        with info : ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
     )
     
     //

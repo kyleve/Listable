@@ -119,7 +119,10 @@ fileprivate struct CardElement : BlueprintItemContent, Equatable
     var detail : String
     var color : UIColor
     
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         Column { column in
             

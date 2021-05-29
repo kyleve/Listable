@@ -20,7 +20,10 @@ fileprivate struct XcodePreviewDemoContent : BlueprintItemContent, Equatable
         return .init(text)
     }
     
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         Row { row in
             row.verticalAlignment = .fill

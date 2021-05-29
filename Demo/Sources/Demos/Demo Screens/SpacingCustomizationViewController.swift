@@ -84,7 +84,10 @@ fileprivate struct CardElement : BlueprintItemContent, Equatable
         return .init(self.title)
     }
 
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         return Box(
             backgroundColor: self.color,

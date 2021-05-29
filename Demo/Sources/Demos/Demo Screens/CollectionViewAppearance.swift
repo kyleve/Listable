@@ -91,7 +91,10 @@ struct DemoItem : BlueprintItemContent, Equatable, LocalizedCollatableItemConten
 
     typealias SwipeActionsView = DefaultSwipeActionsView
     
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         Label(text: self.text) {
             $0.font = .systemFont(ofSize: 16.0, weight: .medium)

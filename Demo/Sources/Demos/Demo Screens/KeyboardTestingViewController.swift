@@ -80,7 +80,10 @@ struct TextFieldElement : BlueprintItemContent, Equatable
         return .init(self.content)
     }
     
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     {
         let textField = TextField(text: self.content)
         

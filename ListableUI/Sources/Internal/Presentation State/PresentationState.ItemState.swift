@@ -267,7 +267,10 @@ extension PresentationState
             self.model.content.apply(
                 to: ItemContentViews(content: cell.contentContainer.contentView, background: cell.background, selectedBackground: cell.selectedBackground),
                 for: reason,
-                with: applyInfo
+                with: applyInfo,
+                send : { _ in
+                    fatalError("TODO")
+                }
             )
                         
             // Apply Swipe To Action Appearance

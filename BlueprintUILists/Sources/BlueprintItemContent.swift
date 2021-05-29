@@ -67,7 +67,10 @@ public protocol BlueprintItemContent : ItemContent
     /// You can use the provided `ApplyItemContentInfo` to vary the appearance of the element
     /// based on the current state of the item.
     ///
-    func element(with info : ApplyItemContentInfo) -> Element
+    func element(
+        with info : ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
     
     /// Optional. Create and return the Blueprint element used to represent the background of the content.
     /// You usually provide this method alongside `selectedBackgroundElement`, if your content
@@ -123,9 +126,13 @@ public extension BlueprintItemContent
     //
     
     /// Maps the `BlueprintItemContent` methods into the underlying `BlueprintView`s used to render the element.
-    func apply(to views : ItemContentViews<Self>, for reason: ApplyReason, with info : ApplyItemContentInfo)
-    {
-        views.content.element = self.element(with: info).wrapInBlueprintEnvironmentFrom(environment: info.environment)
+    func apply(
+        to views : ItemContentViews<Self>,
+        for reason: ApplyReason,
+        with info : ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) {
+        views.content.element = self.element(with: info, send: send).wrapInBlueprintEnvironmentFrom(environment: info.environment)
         views.background.element = self.backgroundElement(with: info)?.wrapInBlueprintEnvironmentFrom(environment: info.environment)
         views.selectedBackground.element = self.selectedBackgroundElement(with: info)?.wrapInBlueprintEnvironmentFrom(environment: info.environment)
         

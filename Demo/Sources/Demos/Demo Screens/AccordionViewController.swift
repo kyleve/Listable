@@ -84,7 +84,11 @@ fileprivate struct AccordionRow : BlueprintItemContent, Equatable
         .init(text)
     }
     
-    func element(with info: ApplyItemContentInfo) -> Element {
+    func element(
+        with info: ApplyItemContentInfo,
+        send : @escaping Coordinator.SendAction
+    ) -> Element
+    {
         Label(text: self.text) {
             $0.alignment = .left
             $0.font = .systemFont(ofSize: 16.0, weight: .regular)
