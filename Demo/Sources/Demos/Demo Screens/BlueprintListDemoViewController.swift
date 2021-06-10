@@ -54,8 +54,7 @@ final class BlueprintListDemoViewController : UIViewController
                 if showingData {
                     let podcasts = Podcast.podcasts.sorted { $0.episode < $1.episode }
                     
-                    podcasts.map { podcast in
-                        
+                    for podcast in podcasts {
                         Item(podcast, identifier: \.name) { _, _ in
                             PodcastElement(podcast: podcast)
                         } background: { _, _ in

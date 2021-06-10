@@ -16,6 +16,8 @@ import Foundation
 /// https://github.com/apple/swift-evolution/blob/main/proposals/0289-result-builders.md
 /// https://www.swiftbysundell.com/articles/deep-dive-into-swift-function-builders/
 ///
+/// TODO: Map does not work yet. I think I need to make array conform to AnyItemConvertible? But that didnt quite work...
+///
 @resultBuilder public struct ContentBuilder<ContentType> {
     
     /// The type of individual statement expressions in the transformed function.
@@ -27,10 +29,19 @@ import Foundation
     /// The type of the final returned result.
     public typealias FinalResult = [ContentType]
     
+    public static func buildBlock() -> Component {
+        []
+    }
+    
     /// Required by every result builder to build combined results from
     /// statement blocks.
     public static func buildBlock(_ components: Component...) -> Component {
         components.reduce(into: []) { $0 += $1 }
+    }
+    
+    public static func buildBlock(_ components: Expression...) -> Component {
+        components
+        //components.reduce(into: []) { $0 += $1 }
     }
 
     /// If declared, provides contextual type information for statement
