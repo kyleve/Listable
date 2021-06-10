@@ -71,8 +71,7 @@ public struct Section
         footer : AnyHeaderFooter? = nil,
         items : [AnyItem] = [],
         configure : Configure = { _ in }
-        )
-    {
+    ) {
         self.identifier = Identifier<Section>(identifier)
         
         self.layouts = layouts
@@ -83,6 +82,24 @@ public struct Section
         self.items = items
         
         configure(&self)
+    }
+    
+    public init<IdentifierType:Hashable>(
+        _ identifier : IdentifierType,
+        configure : Configure = { _ in },
+        @ContentBuilder<AnyItemConvertible> content : () -> [AnyItemConvertible]
+    ) {
+        self.init(identifier, configure: configure)
+        
+        self.add(content)
+    }
+    
+    //
+    // MARK: Building Content
+    //
+    
+    public mutating func add(@ContentBuilder<AnyItemConvertible> _ content : () -> [AnyItemConvertible]) {
+        self.items += content().map { $0.asItem() }
     }
     
     //

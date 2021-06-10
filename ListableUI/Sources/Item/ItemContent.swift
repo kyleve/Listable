@@ -37,7 +37,7 @@
 /// z-index 2) `SelectedBackgroundView` (Only if the item supports a `selectionStyle` and is selected or highlighted.)
 /// z-index 1) `BackgroundView`
 ///
-public protocol ItemContent where Coordinator.ItemContentType == Self
+public protocol ItemContent : AnyItemConvertible where Coordinator.ItemContentType == Self
 {
     //
     // MARK: Identification
@@ -231,6 +231,14 @@ public struct ApplyItemContentInfo
     /// The environment of the containing list.
     /// See `ListEnvironment` for usage information.
     public var environment : ListEnvironment
+}
+
+
+public extension ItemContent {
+    
+    func asItem() -> AnyItem {
+        Item(self)
+    }
 }
 
 

@@ -71,6 +71,20 @@ public struct List : Element
         self.properties = .default(with: configure)
     }
     
+    /// Create a new list, configured with the provided properties,
+    /// configured with the provided `ListProperties` builder.
+    public init(
+        sizing : ListSizing = .fillParent,
+        configure : ListProperties.Configure = { _ in },
+        @ContentBuilder<Section> build : () -> [Section]
+    ) {
+        self.sizing = sizing
+        
+        self.properties = .default(with: configure)
+        
+        self.properties += build()
+    }
+    
     //
     // MARK: Element
     //

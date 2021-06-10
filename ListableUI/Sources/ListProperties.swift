@@ -198,6 +198,10 @@ public struct ListProperties
     // MARK: Mutating Content
     //
     
+    public mutating func add(@ContentBuilder<Section> _ builder : () -> [Section]) {
+        self.content.sections += builder()
+    }
+    
     /// Updates the `ListProperties` object with the changes in the provided builder.
     public mutating func modify(using configure : Configure) {
         configure(&self)
