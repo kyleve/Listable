@@ -86,16 +86,6 @@ public struct Section
     
     public init<IdentifierType:Hashable>(
         _ identifier : IdentifierType,
-        configure : Configure,
-        @ContentBuilder<AnyItemConvertible> items : () -> [AnyItemConvertible]
-    ) {
-        self.init(identifier, configure: configure)
-        
-        self(items)
-    }
-    
-    public init<IdentifierType:Hashable>(
-        _ identifier : IdentifierType,
         @ContentBuilder<AnyItemConvertible> items : () -> [AnyItemConvertible]
     ) {
         self.init(identifier)
