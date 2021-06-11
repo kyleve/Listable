@@ -26,9 +26,9 @@ class ListViewTests: XCTestCase
             
             listView?.configure { list in
                 
-                list.content.header = HeaderFooter(TestSupplementary())
-                list.content.footer = HeaderFooter(TestSupplementary())
-                list.content.overscrollFooter = HeaderFooter(TestSupplementary())
+                list.header = HeaderFooter(TestSupplementary())
+                list.footer = HeaderFooter(TestSupplementary())
+                list.overscrollFooter = HeaderFooter(TestSupplementary())
 
                 list("content") { section in
                     section.header = HeaderFooter(TestSupplementary())

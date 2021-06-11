@@ -45,8 +45,8 @@ class PagedListLayoutTests : XCTestCase
                 $0.itemInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
             }
             
-            list.content.header = HeaderFooter(TestingHeaderFooterContent(color: .blue))
-            list.content.footer = HeaderFooter(TestingHeaderFooterContent(color: .green))
+            list.header = HeaderFooter(TestingHeaderFooterContent(color: .blue))
+            list.footer = HeaderFooter(TestingHeaderFooterContent(color: .green))
             
             list += Section("first") { section in
                 

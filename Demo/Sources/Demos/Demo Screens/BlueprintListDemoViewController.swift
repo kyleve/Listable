@@ -49,7 +49,7 @@ final class BlueprintListDemoViewController : UIViewController
     func reloadData()
     {
         self.blueprintView.element = List {
-            Section("podcasts", configure: { _ in }) {
+            Section("podcasts") {
                 
                 if showingData {
                     let podcasts = Podcast.podcasts.sorted { $0.episode < $1.episode }

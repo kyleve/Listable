@@ -24,8 +24,8 @@ class ListTests : XCTestCase {
         
         view.element = List { list in
             
-            list.content.header = HeaderFooter(TestHeaderContent(wasCalled: callback))
-            list.content.footer = HeaderFooter(TestHeaderContent(wasCalled: callback))
+            list.header = HeaderFooter(TestHeaderContent(wasCalled: callback))
+            list.footer = HeaderFooter(TestHeaderContent(wasCalled: callback))
             
             list("section") { section in
                 

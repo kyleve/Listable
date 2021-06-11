@@ -18,7 +18,7 @@ import ListableUI
 /// on `ListView` itself.
 /// ```
 /// List { list in
-///     list.content.header = HeaderFooter(PodcastsHeader())
+///     list.header = HeaderFooter(PodcastsHeader())
 ///
 ///     let podcasts = Podcast.podcasts.sorted { $0.episode < $1.episode }
 ///

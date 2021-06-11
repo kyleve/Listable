@@ -112,10 +112,10 @@ class TableListLayoutTests : XCTestCase
             }
 
             if includeHeader {
-                list.content.header = HeaderFooter(TestingHeaderFooterContent(color: .blue), sizing: .fixed(height: 50.0))
+                list.header = HeaderFooter(TestingHeaderFooterContent(color: .blue), sizing: .fixed(height: 50.0))
             }
 
-            list.content.footer = HeaderFooter(TestingHeaderFooterContent(color: .blue), sizing: .fixed(height: 70.0))
+            list.footer = HeaderFooter(TestingHeaderFooterContent(color: .blue), sizing: .fixed(height: 70.0))
             
             list += Section("first") { section in
                 section.layouts.table.customInterSectionSpacing = 30

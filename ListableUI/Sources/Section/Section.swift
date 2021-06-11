@@ -86,22 +86,36 @@ public struct Section
     
     public init<IdentifierType:Hashable>(
         _ identifier : IdentifierType,
-        configure : Configure = { _ in },
-        @ContentBuilder<AnyItemConvertible> content : () -> [AnyItemConvertible]
+        configure : Configure,
+        @ContentBuilder<AnyItemConvertible> items : () -> [AnyItemConvertible]
     ) {
         self.init(identifier, configure: configure)
         
-        self.add(content)
+        self(items)
+    }
+    
+    public init<IdentifierType:Hashable>(
+        _ identifier : IdentifierType,
+        @ContentBuilder<AnyItemConvertible> items : () -> [AnyItemConvertible]
+    ) {
+        self.init(identifier)
+
+        self(items)
     }
     
     //
     // MARK: Building Content
     //
     
-    public mutating func add(@ContentBuilder<AnyItemConvertible> _ content : () -> [AnyItemConvertible]) {
+    ///
+    ///
+    ///
+    public mutating func callAsFunction(
+        @ContentBuilder<AnyItemConvertible> _ content : () -> [AnyItemConvertible]
+    ) {
         self.items += content().map { $0.asItem() }
     }
-    
+
     //
     // MARK: Adding & Removing Single Items
     //
