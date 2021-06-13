@@ -59,90 +59,110 @@ final class ItemizationEditorViewController : UIViewController
                 alignment: .top
             )
             
-            let variationsTitle : String = {
-                if let selected = self.itemization.variations.selected.first {
-                    return selected.name
-                } else {
-                    return self.itemization.variations.name
-                }
-            }()
-            
-            let footerText : String = {
-                if self.itemization.variations.selected.isEmpty {
-                    return "Choose at least one variation"
-                } else {
-                    return "You chose too many!!"
-                }
-            }()
-            
-            list += Section(SectionIdentifier.variations) { section in
+            list {
+                let variationsTitle : String = {
+                    if let selected = self.itemization.variations.selected.first {
+                        return selected.name
+                    } else {
+                        return self.itemization.variations.name
+                    }
+                }()
                 
-                section.layouts.table.columns = .init(count: 2, spacing: 20.0)
-                section.header = HeaderFooter(Header(title: variationsTitle), sizing: .thatFits())
-                section.footer = HeaderFooter(Footer(text: footerText), sizing: .thatFits())
+                let footerText : String = {
+                    if self.itemization.variations.selected.isEmpty {
+                        return "Choose at least one variation"
+                    } else {
+                        return "You chose too many!!"
+                    }
+                }()
                 
-                section += self.itemization.variations.all.map { variation in
-                    Item(
-                        ChoiceItem(title: variation.name, detail: "$0.00"),
-                        selectionStyle: .selectable(isSelected: self.itemization.variations.selected.contains(variation)),
-                        onSelect: { _ in
-                            self.itemization.variations.select(modifier: variation)
-                        },
-                        onDeselect: { _ in
-                            self.itemization.variations.deselect(modifier: variation)
-                    })
-                }
-            }
-
-            list += itemization.modifiers.map { set in
-                Section(SectionIdentifier.modifier(set.name)) { section in
+                Section(SectionIdentifier.variations) { section in
                     
                     section.layouts.table.columns = .init(count: 2, spacing: 20.0)
+                    section.header = HeaderFooter(Header(title: variationsTitle), sizing: .thatFits())
+                    section.footer = HeaderFooter(Footer(text: footerText), sizing: .thatFits())
                     
-                    section.header = HeaderFooter(Header(title: set.name), sizing: .thatFits())
-                    section.footer = HeaderFooter(Footer(text: "Choose modifiers"), sizing: .thatFits())
-                    
-                    section += set.all.map { modifier in
-                        Item(
-                            ChoiceItem(title: modifier.name, detail: "$0.00"),
-                            selectionStyle: .selectable(isSelected: false),
-                            onSelect: { _ in
-                                
-                        },
-                            onDeselect: { _ in
-                                
-                        })
-                    }
-                }
-            }
-            
-            list += Section(SectionIdentifier.discounts) { section in
-                
-                section.layouts.table.columns = .init(count: 2, spacing: 20.0)
-                section.header = HeaderFooter(Header(title: "Discounts"), sizing: .thatFits())
-                
-                section += self.availableOptions.allDiscounts.map { discount in
-                    ToggleItem(content: .init(title: discount.name, detail: "$0.00", isOn: self.itemization.has(discount))) { isOn in
-                        if isOn {
-                            self.itemization.add(discount)
-                        } else {
-                            self.itemization.remove(discount)
+                    section {
+                        for variation in itemization.variations.all {
+                            Item(
+                                ChoiceItem(title: variation.name, detail: "$0.00"),
+                                selectionStyle: .selectable(isSelected: self.itemization.variations.selected.contains(variation)),
+                                onSelect: { _ in
+                                    self.itemization.variations.select(modifier: variation)
+                                },
+                                onDeselect: { _ in
+                                    self.itemization.variations.deselect(modifier: variation)
+                            })
                         }
                     }
                 }
-            }
-            
-            list += Section(SectionIdentifier.taxes) { section in
+
+                for set in itemization.modifiers {
+                    Section(SectionIdentifier.modifier(set.name)) { section in
+                        
+                        section.layouts.table.columns = .init(count: 2, spacing: 20.0)
+                        
+                        section.header = HeaderFooter(Header(title: set.name), sizing: .thatFits())
+                        section.footer = HeaderFooter(Footer(text: "Choose modifiers"), sizing: .thatFits())
+                        
+                        section {
+                            for modifier in set.all {
+                                Item(
+                                    ChoiceItem(title: modifier.name, detail: "$0.00"),
+                                    selectionStyle: .selectable(isSelected: false),
+                                    onSelect: { _ in
+                                },
+                                    onDeselect: { _ in
+                                })
+                            }
+                        }
+                    }
+                }
                 
-                section.layouts.table.columns = .init(count: 2, spacing: 20.0)
-                section.header = HeaderFooter(Header(title: "Taxes"), sizing: .thatFits())
+                Section(SectionIdentifier.discounts) { section in
+                    
+                    section.layouts.table.columns = .init(count: 2, spacing: 20.0)
+                    section.header = HeaderFooter(Header(title: "Discounts"), sizing: .thatFits())
+                    
+                    section {
+                        for discount in self.availableOptions.allDiscounts {
+                            ToggleItem(
+                                content: .init(
+                                    title: discount.name,
+                                    detail: "$0.00",
+                                    isOn: self.itemization.has(discount)
+                                )
+                            ) { isOn in
+                                if isOn {
+                                    self.itemization.add(discount)
+                                } else {
+                                    self.itemization.remove(discount)
+                                }
+                            }
+                        }
+                    }
+                }
                 
-                section += self.availableOptions.allTaxes.map { tax in
-                    ToggleItem(content: .init(title: tax.name, detail: "$0.00", isOn: self.itemization.has(tax))) { isOn in
-                        if isOn {
-                            self.itemization.add(tax)
-                        } else {
-                            self.itemization.remove(tax)
+                Section(SectionIdentifier.taxes) { section in
+                    
+                    section.layouts.table.columns = .init(count: 2, spacing: 20.0)
+                    section.header = HeaderFooter(Header(title: "Taxes"), sizing: .thatFits())
+                    
+                    section {
+                        for tax in self.availableOptions.allTaxes {
+                            ToggleItem(
+                                content: .init(
+                                    title: tax.name,
+                                    detail: "$0.00",
+                                    isOn: self.itemization.has(tax)
+                                )
+                            ) { isOn in
+                                if isOn {
+                                    self.itemization.add(tax)
+                                } else {
+                                    self.itemization.remove(tax)
+                                }
+                            }
                         }
                     }
                 }

@@ -22,17 +22,17 @@ class ListView_VisibleContentTests : XCTestCase
                 $0.stickySectionHeaders = false
             }
             
-            list.content.header = HeaderFooter(
+            list.header = HeaderFooter(
                 TestHeaderFooter(color: .blue),
                 sizing: .fixed(height: 50.0)
             )
             
-            list.content.footer = HeaderFooter(
+            list.footer = HeaderFooter(
                 TestHeaderFooter(color: .green),
                 sizing: .fixed(height: 50.0)
             )
             
-            list.content.overscrollFooter = HeaderFooter(
+            list.overscrollFooter = HeaderFooter(
                 TestHeaderFooter(color: .blue),
                 sizing: .fixed(height: 50.0)
             )

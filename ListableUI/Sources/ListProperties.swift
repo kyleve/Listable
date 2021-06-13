@@ -36,7 +36,7 @@ import Foundation
 /// available `func configure(with:)` methods. Having a separate method which describes and provides
 /// all the properties to configure your `ListView` allows for a more singular flow of data through your application,
 /// and eases in testability.
-public struct ListProperties
+@dynamicMemberLookup public struct ListProperties
 {
     //
     // MARK: Animated Changes
@@ -195,20 +195,60 @@ public struct ListProperties
     }
     
     //
-    // MARK: Mutating Content
+    // MARK: Result Builders, Etc.
     //
     
-    /// Updates the `ListProperties` object with the changes in the provided builder.
-    public mutating func modify(using configure : Configure) {
-        configure(&self)
+    /// Allows directly setting properties on the list's content, without having to explicitly specify
+    /// the `.content` component. Eg, you can now replace:
+    /// ```
+    /// ListProperties { list in
+    ///     list.content.header = ...
+    ///     list.content.footer = ...
+    ///     ...
+    /// }
+    /// ```
+    /// With:
+    /// ```
+    /// ListProperties { list in
+    ///     list.header = ...
+    ///     list.footer = ...
+    ///     ...
+    /// }
+    /// ```
+    public subscript<Value>(dynamicMember keyPath: WritableKeyPath<Content, Value>) -> Value {
+        get { self.content[keyPath: keyPath] }
+        set { self.content[keyPath: keyPath] = newValue }
     }
     
-    /// Creates a new `ListProperties` object modified by the changes in the provided builder.
-    public func modified(using configure : Configure) -> ListProperties {
-        var copy = self
-        configure(&copy)
-        return copy
+#if swift(>=5.4)
+    ///
+    ///
+    ///
+    public mutating func callAsFunction(
+        @ContentBuilder<Section> _ builder : () -> [Section]
+    ) {
+        self.sections += builder()
     }
+#endif
+    
+    /// Allows streamlined creation of sections when building a list:
+    /// ```
+    /// listView.configure { list in
+    ///     list("section-id") { section in
+    ///         ...
+    ///     }
+    /// }
+    /// ```
+    public mutating func callAsFunction<Identifier:Hashable>(
+        _ identifier : Identifier,
+        configure : Section.Configure
+    ) {
+        self += Section(identifier, configure: configure)
+    }
+    
+    //
+    // MARK: Adding Content
+    //
     
     /// Adds a new section to the `content`.
     public mutating func add(_ section : Section)
@@ -228,20 +268,19 @@ public struct ListProperties
         lhs.content.sections += rhs
     }
     
-    /// Allows streamlined creation of sections when building a list.
-    ///
-    /// Example
-    /// -------
-    /// ```
-    /// listView.configure { list in
-    ///     list("section-id") { section in
-    ///         ...
-    ///     }
-    /// }
-    /// ```
-    public mutating func callAsFunction<Identifier:Hashable>(_ identifier : Identifier, configure : Section.Configure)
-    {
-        self += Section(identifier, configure: configure)
+    //
+    // MARK: Modifying Content
+    //
+    
+    /// Updates the `ListProperties` object with the changes in the provided builder.
+    public mutating func modify(using configure : Configure) {
+        configure(&self)
+    }
+    
+    /// Creates a new `ListProperties` object modified by the changes in the provided builder.
+    public func modified(using configure : Configure) -> ListProperties {
+        var copy = self
+        configure(&copy)
+        return copy
     }
 }
-

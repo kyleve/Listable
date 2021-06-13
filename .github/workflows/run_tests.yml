@@ -1,5 +1,6 @@
-  # https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md
-  # https://github.com/actions/cache/blob/ff937cc95032836a535d249de4ce2fc52aeae834/examples.md
+# https://github.com/actions/virtual-environments/blob/main/images/macos/macos-10.15-Readme.md
+# https://github.com/actions/virtual-environments/blob/main/images/macos/macos-11-Readme.md
+# https://github.com/actions/cache/blob/ff937cc95032836a535d249de4ce2fc52aeae834/examples.md
 
 
 name: Tests
@@ -12,11 +13,11 @@ jobs:
   ios_14:
     name: iOS 14
 
-    runs-on: macos-10.15
+    runs-on: macos-11.3
 
     steps:
       - name: Switch To Xcode 12
-        run: sudo xcode-select -switch /Applications/Xcode_12.2.app
+        run: sudo xcode-select -switch /Applications/Xcode_12.5.app
 
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -56,11 +57,11 @@ jobs:
   ios_13:
     name: iOS 13
 
-    runs-on: macos-10.15
+    runs-on: macos-11.3
 
     steps:
       - name: Switch To Xcode 12
-        run: sudo xcode-select -switch /Applications/Xcode_12.2.app
+        run: sudo xcode-select -switch /Applications/Xcode_12.5.app
 
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -103,11 +104,11 @@ jobs:
   ios_12:
     name: iOS 12
 
-    runs-on: macos-10.15
+    runs-on: macos-11.3
 
     steps:
       - name: Switch To Xcode 12
-        run: sudo xcode-select -switch /Applications/Xcode_12.2.app
+        run: sudo xcode-select -switch /Applications/Xcode_12.5.app
 
       - name: Checkout Repository
         uses: actions/checkout@v1
@@ -150,11 +151,11 @@ jobs:
   ios_11:
     name: iOS 11
 
-    runs-on: macos-10.15
+    runs-on: macos-11.3
 
     steps:
       - name: Switch To Xcode 12
-        run: sudo xcode-select -switch /Applications/Xcode_12.2.app
+        run: sudo xcode-select -switch /Applications/Xcode_12.5.app
 
       - name: Checkout Repository
         uses: actions/checkout@v1

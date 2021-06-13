@@ -18,7 +18,7 @@ import ListableUI
 /// on `ListView` itself.
 /// ```
 /// List { list in
-///     list.content.header = HeaderFooter(PodcastsHeader())
+///     list.header = HeaderFooter(PodcastsHeader())
 ///
 ///     let podcasts = Podcast.podcasts.sorted { $0.episode < $1.episode }
 ///
@@ -70,6 +70,22 @@ public struct List : Element
         
         self.properties = .default(with: configure)
     }
+    
+#if swift(>=5.4)
+    /// Create a new list, configured with the provided properties,
+    /// configured with the provided `ListProperties` builder.
+    public init(
+        sizing : ListSizing = .fillParent,
+        configure : ListProperties.Configure = { _ in },
+        @ContentBuilder<Section> build : () -> [Section]
+    ) {
+        self.sizing = sizing
+        
+        self.properties = .default(with: configure)
+        
+        self.properties += build()
+    }
+#endif
     
     //
     // MARK: Element

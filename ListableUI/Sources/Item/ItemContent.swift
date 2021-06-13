@@ -37,7 +37,7 @@
 /// z-index 2) `SelectedBackgroundView` (Only if the item supports a `selectionStyle` and is selected or highlighted.)
 /// z-index 1) `BackgroundView`
 ///
-public protocol ItemContent where Coordinator.ItemContentType == Self
+public protocol ItemContent : AnyItemConvertible where Coordinator.ItemContentType == Self
 {
     //
     // MARK: Identification
@@ -234,10 +234,19 @@ public struct ApplyItemContentInfo
 }
 
 
+/// Implements `AnyItemConvertible`.
+extension ItemContent {
+    
+    public func asItem() -> AnyItem {
+        Item(self)
+    }
+}
+
+
 /// Provide a default implementation of `isEquivalent(to:)` if the `ItemContent` is `Equatable`.
-public extension ItemContent where Self:Equatable
+extension ItemContent where Self:Equatable
 {
-    func isEquivalent(to other : Self) -> Bool
+    public func isEquivalent(to other : Self) -> Bool
     {
         return self == other
     }
@@ -246,18 +255,18 @@ public extension ItemContent where Self:Equatable
 
 /// Provides a default implementation of `identifier` when self conforms to Swift's `Identifiable` protocol.
 @available(iOS 13.0, *)
-public extension ItemContent where Self:Identifiable
+extension ItemContent where Self:Identifiable
 {
-    var identifier : Identifier<Self> {
+    public var identifier : Identifier<Self> {
         .init(self.id)
     }
 }
 
 
 /// Implement `wasMoved` in terms of `isEquivalent(to:)` by default.
-public extension ItemContent
+extension ItemContent
 {
-    func wasMoved(comparedTo other : Self) -> Bool
+    public func wasMoved(comparedTo other : Self) -> Bool
     {
         return self.isEquivalent(to: other) == false
     }
@@ -266,18 +275,18 @@ public extension ItemContent
 
 /// Provide a default implementation of `defaultItemProperties` which returns an
 /// empty instance that does not provide any defaults.
-public extension ItemContent
+extension ItemContent
 {
-    var defaultItemProperties : DefaultItemProperties<Self> {
+    public var defaultItemProperties : DefaultItemProperties<Self> {
         .init()
     }
 }
 
 
 /// Provides a default coordinator for items without a specified coordinator.
-public extension ItemContent where Coordinator == DefaultItemContentCoordinator<Self>
+extension ItemContent where Coordinator == DefaultItemContentCoordinator<Self>
 {
-    func makeCoordinator(actions : ItemContentCoordinatorActions<Self>, info : ItemContentCoordinatorInfo<Self>) -> Coordinator
+    public func makeCoordinator(actions : ItemContentCoordinatorActions<Self>, info : ItemContentCoordinatorInfo<Self>) -> Coordinator
     {
         DefaultItemContentCoordinator(actions: actions, info: info)
     }
@@ -285,9 +294,9 @@ public extension ItemContent where Coordinator == DefaultItemContentCoordinator<
 
 
 /// Provide a UIView when no special background view is specified.
-public extension ItemContent where BackgroundView == UIView
+extension ItemContent where BackgroundView == UIView
 {
-    static func createReusableBackgroundView(frame : CGRect) -> BackgroundView
+    public static func createReusableBackgroundView(frame : CGRect) -> BackgroundView
     {
         BackgroundView(frame: frame)
     }
@@ -295,9 +304,9 @@ public extension ItemContent where BackgroundView == UIView
 
 
 /// Provide a UIView when no special selected background view is specified.
-public extension ItemContent where BackgroundView == UIView
+extension ItemContent where BackgroundView == UIView
 {
-    static func createReusableSelectedBackgroundView(frame : CGRect) -> SelectedBackgroundView
+    public static func createReusableSelectedBackgroundView(frame : CGRect) -> SelectedBackgroundView
     {
         SelectedBackgroundView(frame: frame)
     }

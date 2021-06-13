@@ -6,7 +6,7 @@
 //
 
 
-public struct Item<Content:ItemContent> : AnyItem
+public struct Item<Content:ItemContent> : AnyItem, AnyItemConvertible
 {
     public var identifier : AnyIdentifier
     
@@ -134,6 +134,12 @@ public struct Item<Content:ItemContent> : AnyItem
     
     public var anyContent: Any {
         self.content
+    }
+    
+    // MARK: AnyItemConvertible
+    
+    public func asItem() -> AnyItem {
+        self
     }
     
     // MARK: AnyItem_Internal

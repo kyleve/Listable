@@ -8,7 +8,7 @@
 import Foundation
 
 
-public protocol AnyItem : AnyItem_Internal
+public protocol AnyItem : AnyItemConvertible, AnyItem_Internal
 {
     var identifier : AnyIdentifier { get }
     
