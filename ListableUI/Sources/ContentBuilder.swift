@@ -5,7 +5,7 @@
 //  Created by Kyle Van Essen on 6/10/21.
 //
 
-import Foundation
+#if swift(>=5.4)
 
 
 ///
@@ -18,7 +18,7 @@ import Foundation
 ///
 /// TODO: Map does not work yet. I think I need to make array conform to AnyItemConvertible? But that didnt quite work...
 ///
-@resultBuilder public struct ContentBuilder<ContentType> {
+@resultBuilder public enum ContentBuilder<ContentType> {
     
     /// The type of individual statement expressions in the transformed function.
     public typealias Expression = ContentType
@@ -86,3 +86,5 @@ import Foundation
         component
     }
 }
+
+#endif

@@ -84,6 +84,7 @@ public struct Section
         configure(&self)
     }
     
+#if swift(>=5.4)
     public init<IdentifierType:Hashable>(
         _ identifier : IdentifierType,
         @ContentBuilder<AnyItemConvertible> items : () -> [AnyItemConvertible]
@@ -92,11 +93,13 @@ public struct Section
 
         self(items)
     }
+#endif
     
     //
     // MARK: Building Content
     //
     
+#if swift(>=5.4)
     ///
     ///
     ///
@@ -105,6 +108,7 @@ public struct Section
     ) {
         self.items += content().map { $0.asItem() }
     }
+#endif
 
     //
     // MARK: Adding & Removing Single Items

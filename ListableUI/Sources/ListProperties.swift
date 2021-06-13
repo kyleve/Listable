@@ -220,6 +220,7 @@ import Foundation
         set { self.content[keyPath: keyPath] = newValue }
     }
     
+#if swift(>=5.4)
     ///
     ///
     ///
@@ -228,6 +229,7 @@ import Foundation
     ) {
         self.sections += builder()
     }
+#endif
     
     /// Allows streamlined creation of sections when building a list:
     /// ```

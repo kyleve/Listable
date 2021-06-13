@@ -71,6 +71,7 @@ public struct List : Element
         self.properties = .default(with: configure)
     }
     
+#if swift(>=5.4)
     /// Create a new list, configured with the provided properties,
     /// configured with the provided `ListProperties` builder.
     public init(
@@ -84,6 +85,7 @@ public struct List : Element
         
         self.properties += build()
     }
+#endif
     
     //
     // MARK: Element
