@@ -19,6 +19,7 @@ public protocol AnyItem : AnyItem_Internal
     var layouts : ItemLayouts { get }
     
     var selectionStyle : ItemSelectionStyle { get set }
+    var contextualMenu : ContextualMenu? { get }
     var insertAndRemoveAnimations : ItemInsertAndRemoveAnimations? { get set }
     var swipeActions : SwipeActionsConfiguration? { get set }
     

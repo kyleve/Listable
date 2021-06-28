@@ -238,7 +238,112 @@ extension ListView
             )
         }
         
+        // MARK: Two-Finger Pan Selection
+        
+        // https://developer.apple.com/documentation/uikit/uitableviewdelegate/selecting_multiple_items_with_a_two-finger_pan_gesture
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            shouldBeginMultipleSelectionInteractionAt indexPath: IndexPath
+        ) -> Bool
+        {
+            view.behavior.selectionMode == .multiple
+        }
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            didBeginMultipleSelectionInteractionAt indexPath: IndexPath
+        ) {
+            
+        }
+        
+        @available(iOS 13.0, *)
+        func collectionViewDidEndMultipleSelectionInteraction(_ collectionView: UICollectionView) {
+            
+        }
+        
+        // MARK: Contextual Previews
+        
+        private weak var activeContextMenuItem : AnyPresentationItemState? = nil
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            contextMenuConfigurationForItemAt indexPath: IndexPath,
+            point: CGPoint
+        ) -> UIContextMenuConfiguration?
+        {
+            let item = self.presentationState.item(at: indexPath)
+            let menu = item.anyModel.contextualMenu
+            
+            self.activeContextMenuItem = item
+
+            return menu?.toUIContextMenuConfiguration()
+        }
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            willDisplayContextMenu configuration: UIContextMenuConfiguration,
+            animator: UIContextMenuInteractionAnimating?
+        ) {
+            guard let menu = self.activeContextMenuItem?.anyModel.contextualMenu else {
+                return
+            }
+            
+            animator?.addCompletion {
+                menu.commit()
+            }
+        }
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            willEndContextMenuInteraction configuration: UIContextMenuConfiguration,
+            animator: UIContextMenuInteractionAnimating?
+        ) {
+            guard let menu = self.activeContextMenuItem?.anyModel.contextualMenu else {
+                return
+            }
+            
+            animator?.addCompletion { [weak self] in
+                self?.activeContextMenuItem = nil
+            }
+        }
+        
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            previewForDismissingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+        ) -> UITargetedPreview?
+        {
+            nil
+        }
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            previewForHighlightingContextMenuWithConfiguration configuration: UIContextMenuConfiguration
+        ) -> UITargetedPreview?
+        {
+            nil
+        }
+        
+        @available(iOS 13.0, *)
+        func collectionView(
+            _ collectionView: UICollectionView,
+            willPerformPreviewActionForMenuWith configuration: UIContextMenuConfiguration,
+            animator: UIContextMenuInteractionCommitAnimating
+        ) {
+            
+        }
+        
+        //
         // MARK: CollectionViewLayoutDelegate
+        //
         
         func listViewLayoutUpdatedItemPositions()
         {
