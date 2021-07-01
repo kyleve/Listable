@@ -78,6 +78,7 @@ public struct EmbeddedList : ItemContent
             appearance: .init {
                 $0.showsScrollIndicators = false
             },
+            contentInsets: .init(),
             scrollIndicatorInsets: .init(),
             behavior: .init(),
             autoScrollAction: .none,

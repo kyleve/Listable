@@ -92,8 +92,11 @@ public struct ListProperties
     /// The appearance to use with the list.
     public var appearance : Appearance
     
+    /// The content insets to apply to the list view.
+    public var contentInsets : ListEdgeInsets
+    
     /// The scroll insets to apply to the list view.
-    public var scrollIndicatorInsets : UIEdgeInsets
+    public var scrollIndicatorInsets : ListEdgeInsets
     
     //
     // MARK: Behavior
@@ -156,7 +159,8 @@ public struct ListProperties
             animatesChanges: UIView.inheritedAnimationDuration > 0.0,
             layout: .table(),
             appearance: .init(),
-            scrollIndicatorInsets: .zero,
+            contentInsets : .empty,
+            scrollIndicatorInsets: .empty,
             behavior: .init(),
             autoScrollAction: .none,
             accessibilityIdentifier: nil,
@@ -170,7 +174,8 @@ public struct ListProperties
         animatesChanges: Bool,
         layout : LayoutDescription,
         appearance : Appearance,
-        scrollIndicatorInsets : UIEdgeInsets,
+        contentInsets : ListEdgeInsets,
+        scrollIndicatorInsets : ListEdgeInsets,
         behavior : Behavior,
         autoScrollAction : AutoScrollAction,
         accessibilityIdentifier: String?,
@@ -180,6 +185,7 @@ public struct ListProperties
         self.animatesChanges = animatesChanges
         self.layout = layout
         self.appearance = appearance
+        self.contentInsets = contentInsets
         self.scrollIndicatorInsets = scrollIndicatorInsets
         self.behavior = behavior
         self.autoScrollAction = autoScrollAction

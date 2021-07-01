@@ -22,7 +22,9 @@ public final class ListView : UIView, KeyboardObserverDelegate
         
         self.behavior = Behavior()
         self.autoScrollAction = .none
-        self.scrollIndicatorInsets = .zero
+        
+        self.contentInsets = .empty
+        self.scrollIndicatorInsets = .empty
         
         self.storage = Storage()
         
@@ -274,10 +276,20 @@ public final class ListView : UIView, KeyboardObserverDelegate
     }
     
     //
-    // MARK: Scroll Insets
+    // MARK: Scroll & Content Insets
     //
     
-    public var scrollIndicatorInsets : UIEdgeInsets {
+    public var contentInsets : ListEdgeInsets {
+        didSet {
+            guard oldValue != self.contentInsets else {
+                return
+            }
+            
+            self.updateScrollViewInsets()
+        }
+    }
+    
+    public var scrollIndicatorInsets : ListEdgeInsets {
         didSet {
             guard oldValue != self.scrollIndicatorInsets else {
                 return
@@ -325,11 +337,19 @@ public final class ListView : UIView, KeyboardObserverDelegate
             }
         }()
         
-        let scrollIndicatorInsets = modified(self.scrollIndicatorInsets) {
+        let currentScrollIndicatorInsets = self.scrollIndicatorInsets.insets(
+            appliedTo: self.collectionView.scrollIndicatorInsets
+        )
+        
+        let scrollIndicatorInsets = modified(currentScrollIndicatorInsets) {
             $0.bottom = max($0.bottom, keyboardBottomInset)
         }
         
-        let contentInsets = modified(self.collectionView.contentInset) {
+        let currentContentInsets = self.contentInsets.insets(
+            appliedTo: self.collectionView.contentInset
+        )
+        
+        let contentInsets = modified(currentContentInsets) {
             $0.bottom = keyboardBottomInset
         }
         
@@ -673,6 +693,7 @@ public final class ListView : UIView, KeyboardObserverDelegate
             animatesChanges: true,
             layout: self.layout,
             appearance: self.appearance,
+            contentInsets: self.contentInsets,
             scrollIndicatorInsets: self.scrollIndicatorInsets,
             behavior: self.behavior,
             autoScrollAction: self.autoScrollAction,
@@ -691,7 +712,10 @@ public final class ListView : UIView, KeyboardObserverDelegate
         self.appearance = properties.appearance
         self.behavior = properties.behavior
         self.autoScrollAction = properties.autoScrollAction
+
+        self.contentInsets = properties.contentInsets
         self.scrollIndicatorInsets = properties.scrollIndicatorInsets
+
         self.collectionView.accessibilityIdentifier = properties.accessibilityIdentifier
         self.debuggingIdentifier = properties.debuggingIdentifier
         self.actions = properties.actions

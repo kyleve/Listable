@@ -8,6 +8,8 @@
 
 ### Changed
 
+- [Update the `scrollIndicatorInsets` type](https://github.com/kyleve/Listable/pull/269) to `ListEdgeInsets`, which is similar to `UIEdgeInsets`, but each property is optional, allowing us to more correctly choose and override applied insets. This change also introduces `contentInsets` on `ListView`, which does the same thing, but for the underlying `contentInset` on the `UICollectionView`.
+
 ### Misc
 
 # Past Releases
