@@ -149,7 +149,7 @@ class TableListLayoutTests : XCTestCase
             }
         }
         
-        listView.collectionView.layoutIfNeeded()
+        listView.testing_forceLayoutUpdate()
         
         return listView
     }

@@ -1220,13 +1220,39 @@ public extension ListView
     ///
     /// **WARNING**: You must **not** call this method outside of tests. Doing so will cause a fatal error.
     ///
-    func testing_forceLayoutUpdateNow()
+    func testing_forceLayoutUpdate()
     {
         guard NSClassFromString("XCTestCase") != nil else {
             fatalError("You must not call testing_forceLayoutUpdateNow outside of an XCTest environment.")
         }
         
-        self.collectionView.reloadData()
+        UIView.performWithoutAnimation {
+            self.layoutIfNeeded()
+            self.collectionView.reloadData()
+        }
+    }
+    
+    ///
+    /// Call this method to force an immediate, synchronous re-render of any contained lists
+    /// and their content when writing unit or snapshot tests. This avoids needing to
+    /// spin the runloop or needing to use test expectations to wait for content
+    /// to be rendered asynchronously.
+    ///
+    /// **WARNING**: You must **not** call this method outside of tests. Doing so will cause a fatal error.
+    ///
+    static func testing_forceLayoutUpdateIn(_ view : UIView) {
+        
+        UIView.performWithoutAnimation {
+            view.layoutIfNeeded()
+        }
+        
+        if let listView = view as? ListView {
+            listView.testing_forceLayoutUpdate()
+        }
+        
+        for subview in view.subviews {
+            ListView.testing_forceLayoutUpdateIn(subview)
+        }
     }
 }
 
