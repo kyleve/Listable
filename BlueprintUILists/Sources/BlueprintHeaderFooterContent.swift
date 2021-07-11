@@ -114,9 +114,14 @@ public extension BlueprintHeaderFooterContent
         for reason: ApplyReason,
         with info: ApplyHeaderFooterContentInfo
     ) {
-        views.content.element = self.elementRepresentation.wrapInBlueprintEnvironmentFrom(environment: info.environment)
-        views.background.element = self.background?.wrapInBlueprintEnvironmentFrom(environment: info.environment)
-        views.pressed.element = self.pressedBackground?.wrapInBlueprintEnvironmentFrom(environment: info.environment)
+        views.content.environment = info.environment.blueprintEnvironment
+        views.content.element = self.elementRepresentation
+
+        views.background.environment = info.environment.blueprintEnvironment
+        views.background.element = self.background
+
+        views.pressed.environment = info.environment.blueprintEnvironment        
+        views.pressed.element = self.pressedBackground
         
         /// `BlueprintView` does not update its content until the next layout cycle.
         /// Force that layout cycle within this method if we're updating an already on-screen

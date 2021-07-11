@@ -46,6 +46,10 @@ public struct ListEnvironment {
     /// A default "empty" environment, with no values overridden.
     /// Each key will return its default value.
     public static let empty = ListEnvironment()
+    
+    public init(_ configure : (inout ListEnvironment) -> () = { _ in }) {
+        configure(&self)
+    }
 
     /// Gets or sets an environment value by its key.
     public subscript<Key>(key: Key.Type) -> Key.Value where Key: ListEnvironmentKey {

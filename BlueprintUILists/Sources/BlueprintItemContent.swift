@@ -126,9 +126,14 @@ public extension BlueprintItemContent
     /// Maps the `BlueprintItemContent` methods into the underlying `BlueprintView`s used to render the element.
     func apply(to views : ItemContentViews<Self>, for reason: ApplyReason, with info : ApplyItemContentInfo)
     {
-        views.content.element = self.element(with: info).wrapInBlueprintEnvironmentFrom(environment: info.environment)
-        views.background.element = self.backgroundElement(with: info)?.wrapInBlueprintEnvironmentFrom(environment: info.environment)
-        views.selectedBackground.element = self.selectedBackgroundElement(with: info)?.wrapInBlueprintEnvironmentFrom(environment: info.environment)
+        views.content.environment = info.environment.blueprintEnvironment
+        views.content.element = self.element(with: info)
+
+        views.background.environment = info.environment.blueprintEnvironment
+        views.background.element = self.backgroundElement(with: info)
+        
+        views.selectedBackground.environment = info.environment.blueprintEnvironment
+        views.selectedBackground.element = self.selectedBackgroundElement(with: info)
         
         /// `BlueprintView` does not update its content until the next layout cycle.
         /// Force that layout cycle within this method if we're updating an already on-screen

@@ -63,18 +63,11 @@ public enum ListSizing : Equatable
     /// you will want to use, to ensure the sheet or popover takes up the minimum amount of space possible.
     ///
     /// - parameters:
-    ///     - cacheKey: If provided, the underlying `Element`'s `measurementCacheKey` will be set to this value.
-    ///     Note that this value must be unique within the entire blueprint view – so please provide a sufficiently unique value,
-    ///     or measurement collisions will occur (one element's measurement being used for another) for duplicate keys.
-    ///
     ///     - itemLimit: When measuring the list, how many items should be measured to determine the height. Defaults
     ///     to 50, which is usually enough to fill the `fittingSize`. If you truly want to determine the entire height of all of
     ///     the content in the list, set this to `nil` (but you should rarely need to do this). The lower this value, the less
     ///     overall measurement that has to occur (if the value is less than the number of items in the list), which improvements
     ///     measurement and layout performance.
     ///
-    case measureContent(
-            cacheKey : AnyHashable? = nil,
-            itemLimit : Int? = ListView.defaultContentSizeItemLimit
-         )
+    case measureContent(itemLimit : Int? = ListView.defaultContentSizeItemLimit)
 }
